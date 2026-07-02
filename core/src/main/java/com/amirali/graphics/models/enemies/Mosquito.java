@@ -245,7 +245,11 @@ public class Mosquito extends Entity {
         if (dist > RESPAWN_FAR_DIST) {
             playerHasLeft = true;
         } else if (playerHasLeft && dist < RESPAWN_NEAR_DIST) {
-            respawn();
+            if (!alive) {
+                respawn(); // only dead enemies come back; living ones must not teleport
+            } else {
+                playerHasLeft = false; // re-arm: a later death needs a fresh leave-and-return
+            }
         }
     }
 
