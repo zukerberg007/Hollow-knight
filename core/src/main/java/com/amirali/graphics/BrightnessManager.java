@@ -22,7 +22,6 @@ public class BrightnessManager {
     private static SpriteBatch batch;
     private static Texture pixel;
 
-    /** Load the saved brightness. Call once at startup (Main.create). */
     public static void init() {
         brightness = Gdx.app.getPreferences(PREFS_NAME).getFloat(KEY, 1f);
     }
@@ -37,10 +36,8 @@ public class BrightnessManager {
         p.putFloat(KEY, brightness);
         p.flush();
     }
-
-    /** Draw the dim overlay across the whole window. Call last, after super.render() in Main. */
     public static void render() {
-        if (brightness >= 0.999f) return; // fully bright: nothing to draw
+        if (brightness >= 0.999f) return;
 
         if (batch == null) {
             batch = new SpriteBatch();
@@ -51,7 +48,7 @@ public class BrightnessManager {
             pm.dispose();
         }
 
-        float alpha = 1f - brightness; // up to 0.9 at the darkest setting
+        float alpha = 1f - brightness;
         batch.getProjectionMatrix().setToOrtho2D(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         batch.begin();
         batch.setColor(0f, 0f, 0f, alpha);

@@ -22,7 +22,6 @@ public class GameAssetManager {
     public static final HashMap<AnimationType, Animation<TextureRegion>> animationMap = new HashMap<>();
 
     public static Music menuMusic;
-    // --- FIX: Changed to Music instead of Sound! ---
     public static Music winMusic;
 
     public static com.badlogic.gdx.audio.Sound wallBreakSound;
@@ -39,7 +38,6 @@ public class GameAssetManager {
     public static Texture FULL_ORB;
     public static Texture forgottenCrossroadsBg;
 
-    // Knight SFX
     public static com.badlogic.gdx.audio.Sound slashSound;
     public static com.badlogic.gdx.audio.Sound jumpSound;
     public static com.badlogic.gdx.audio.Sound dashSound;
@@ -69,7 +67,6 @@ public class GameAssetManager {
         menuMusic.setLooping(true);
         menuMusic.setVolume(0.5f);
 
-        // --- FIX: Loaded as newMusic instead of newSound! ---
         winMusic = Gdx.audio.newMusic(Gdx.files.internal("winMusic.mp3"));
 
         slashSound = Gdx.audio.newSound(Gdx.files.internal("sfx/slash.wav"));
@@ -203,7 +200,7 @@ public class GameAssetManager {
         titleImage.dispose();
 
         if (menuMusic != null) menuMusic.dispose();
-        if (winMusic != null) winMusic.dispose(); // --- ADDED DISPOSE ---
+        if (winMusic != null) winMusic.dispose();
         if (hoverPointer != null) hoverPointer.dispose();
         if (forgottenCrossroadsBg != null) forgottenCrossroadsBg.dispose();
         if (wallBreakSound != null) wallBreakSound.dispose();

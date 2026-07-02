@@ -25,7 +25,7 @@ public class GameProcessor implements InputProcessor {
         }
 
         if (keycode == Input.Keys.ESCAPE) {
-            game.player.resetInputs(); // Stops the player in their tracks
+            game.player.resetInputs();
             PauseModal pauseModal = new PauseModal();
             pauseModal.show();
         } else if (keycode == KeyBindings.INVENTORY) {

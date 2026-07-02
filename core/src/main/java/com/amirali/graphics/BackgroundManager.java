@@ -18,7 +18,6 @@ public class BackgroundManager {
             this.file = file;
         }
     }
-
     private static final String PREFS_NAME = "HollowKnightSettings";
     private static final String KEY = "bgTheme";
 
