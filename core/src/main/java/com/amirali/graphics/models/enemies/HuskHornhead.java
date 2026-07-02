@@ -36,7 +36,6 @@ public class HuskHornhead extends Entity {
 
     private Player player;
 
-
     private static final float TURN_DURATION = 0.2f;
     private static final float ANTICIPATE_DURATION = 0.5f;
     private static final float DEATH_AIR_DURATION = 0.1f;
@@ -99,7 +98,6 @@ public class HuskHornhead extends Entity {
     public boolean takeDamage(float dmg) {
         return takeDamage(dmg, bounds.x);
     }
-
 
     @Override
     protected void onDeath() {
@@ -213,7 +211,6 @@ public class HuskHornhead extends Entity {
             return;
         }
 
-
         float frontX = (direction > 0) ? bounds.x + bounds.width : bounds.x - 4;
         Rectangle wallCheck = new Rectangle(frontX, bounds.y + 2, 4, bounds.height - 4);
         if (isOverlappingBlock(wallCheck, blocks)) {
@@ -228,7 +225,6 @@ public class HuskHornhead extends Entity {
 
         bounds.x += speed * direction * delta;
 
-        // Resolve collision
         for (SolidBlock b : blocks) {
             if (b.isDeadly) continue;
             if (bounds.overlaps(b.bounds)) {
@@ -251,7 +247,6 @@ public class HuskHornhead extends Entity {
         stateTimer += delta;
         bounds.x += chargeSpeed * direction * delta;
 
-        // Stop charging if hitting a wall
         for (SolidBlock b : blocks) {
             if (b.isDeadly) continue;
             if (bounds.overlaps(b.bounds)) {
@@ -309,9 +304,9 @@ public class HuskHornhead extends Entity {
             playerHasLeft = true;
         } else if (playerHasLeft && dist < RESPAWN_NEAR_DIST) {
             if (!alive) {
-                respawn(); // only dead enemies come back; living ones must not teleport
+                respawn();
             } else {
-                playerHasLeft = false; // re-arm: a later death needs a fresh leave-and-return
+                playerHasLeft = false;
             }
         }
     }

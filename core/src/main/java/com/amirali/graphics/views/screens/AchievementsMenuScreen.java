@@ -20,7 +20,6 @@ public class AchievementsMenuScreen extends AbstractScreen {
     public void show() {
         super.show();
 
-        // --- NEW: Load Global Achievements ---
         Preferences prefs = Gdx.app.getPreferences("HollowKnightAchievements");
 
         Table mainTable = new Table();
@@ -35,7 +34,6 @@ public class AchievementsMenuScreen extends AbstractScreen {
         listTable.top();
         listTable.defaults().padBottom(15).fillX();
 
-        // Read dynamically from Preferences (pref keys stay English; only display text is localized)
         addAchievement(listTable, t("ach.completion"), t("ach.completion.desc"),
             prefs.getBoolean("Completion", false), "Achievements/achievement__0000_100_complete.png");
 

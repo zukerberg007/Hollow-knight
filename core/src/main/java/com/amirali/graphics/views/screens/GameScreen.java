@@ -81,7 +81,6 @@ public class GameScreen extends AbstractScreen {
     private float shakeTime = 0f, shakeMag = 0f, shakeDuration = 0.35f;
     private boolean wasPlayerDying = false;
 
-    // --- NEW: A timer to delay the end screen so we can watch the boss fall! ---
     private float endScreenTimer = 0f;
 
     private Zote zote;
@@ -377,11 +376,9 @@ public class GameScreen extends AbstractScreen {
                 openToast(t("toast.ach.soulVessel"));
             }
 
-            // --- FIX: Safely check if False Knight's health hit 0, start the timer ---
             if (falseKnight != null && !falseKnight.isAlive() && !bossDefeatedLatch) {
                 endScreenTimer += delta;
 
-                // Wait 3.5 seconds to watch the death animation play out before cutting to the end screen
                 if (endScreenTimer >= 3.5f) {
                     bossDefeatedLatch = true;
                     loadedData.falseKnightDefeated = true;
@@ -736,7 +733,7 @@ public class GameScreen extends AbstractScreen {
                 if (zote != null && downBox.overlaps(zote.getBounds())) {
                     if (game.player.tryConsumeHit()) {
                         zote.takeDamage(nailDamage, game.player.position.x);
-                        isDialogueActive = false; // Hitting him breaks dialogue!
+                        isDialogueActive = false;
                     }
                 }
             }
@@ -812,7 +809,7 @@ public class GameScreen extends AbstractScreen {
                 if (zote != null && upBox.overlaps(zote.getBounds())) {
                     if (game.player.tryConsumeHit()) {
                         zote.takeDamage(nailDamage, game.player.position.x);
-                        isDialogueActive = false; // Hitting him breaks dialogue!
+                        isDialogueActive = false;
                     }
                 }
             }
@@ -931,7 +928,6 @@ public class GameScreen extends AbstractScreen {
             }
             game.player.checkDeath();
 
-            // --- NEW: Gather Player Shake ---
             float ps = game.player.consumeShakeMag();
             if (ps > 0f && (ps >= shakeMag || shakeTime <= 0f)) {
                 float pt = game.player.consumeShakeTime();
@@ -957,7 +953,6 @@ public class GameScreen extends AbstractScreen {
         if (shakeTime > 0f) {
             shakeTime -= delta;
 
-            // --- FIX: Divide by the dynamically stored duration ---
             float k = Math.max(0f, shakeTime) / Math.max(0.01f, shakeDuration);
             camera.position.x += MathUtils.random(-1f, 1f) * shakeMag * k;
             camera.position.y += MathUtils.random(-1f, 1f) * shakeMag * k;
@@ -1177,17 +1172,14 @@ public class GameScreen extends AbstractScreen {
             font.setColor(Color.LIGHT_GRAY);
             font.draw(batch, t("zote.name"), camera.position.x - 560, camera.position.y - 140);
 
-            // Scale up the Body font
             font.getData().setScale(3f);
             font.setColor(Color.WHITE);
             font.draw(batch, visibleText, camera.position.x - 560, camera.position.y - 200, 1120, com.badlogic.gdx.utils.Align.left, true);
 
-            // Scale up the Hint font
             font.getData().setScale(2f);
             font.setColor(Color.GOLD);
             font.draw(batch, "[Press ENTER]", camera.position.x + 380, camera.position.y - 350);
 
-            // Reset
             font.setColor(Color.WHITE);
             font.getData().setScale(1.0f);
 

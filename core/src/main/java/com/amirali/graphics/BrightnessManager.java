@@ -8,12 +8,6 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 
-/**
- * Global screen brightness. The value (0.1 .. 1.0) is persisted in the shared settings prefs.
- *
- * Brightness is applied by drawing a translucent black quad over the ENTIRE window once per frame,
- * after every screen has finished rendering (see Main.render). 1.0 = no overlay, 0.1 = 90% dim.
- */
 public class BrightnessManager {
     private static final String PREFS_NAME = "HollowKnightSettings";
     private static final String KEY = "brightness";

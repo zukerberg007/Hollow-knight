@@ -31,7 +31,6 @@ public class StartMenuScreen extends AbstractScreen {
 
         for (int i = 0; i < 4; i++) {
             final int slotIndex = i + 1;
-            // Load it once just to display the card graphics
             final GameData visualData = SaveManager.loadGame(slotIndex);
             SaveCard saveCard = new SaveCard(slotIndex, visualData);
 
@@ -41,8 +40,6 @@ public class StartMenuScreen extends AbstractScreen {
                     if (!event.isCancelled()) {
                         Game game = new Game();
 
-                        // --- FIX: Reload the file the split-second they click Play! ---
-                        // If they cleared it, this will safely return null.
                         GameData freshData = SaveManager.loadGame(slotIndex);
 
                         uiManager.setScreen(new GameScreen(game, freshData, slotIndex));

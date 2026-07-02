@@ -103,7 +103,7 @@ public class SettingsMenuScreen extends AbstractScreen {
             public void clicked(InputEvent event, float x, float y) {
                 BackgroundManager.Theme theme = BackgroundManager.cycleNext();
                 bgThemeBtn.setText(t("settings.background") + ": " + theme.label);
-                reloadBackgroundVideo(); // swap the menu video immediately
+                reloadBackgroundVideo();
             }
         });
         centerTable.add(bgThemeBtn).width(260).padBottom(10).row();
@@ -111,7 +111,6 @@ public class SettingsMenuScreen extends AbstractScreen {
         Label controlsLabel = new Label(t("settings.controls"), skin, "subtitle");
         centerTable.add(controlsLabel).padTop(20).row();
         centerTable.add(ControlsRebinder.buildControls(skin)).padBottom(10).row();
-
 
         Label langLabel = new Label(t("settings.language"), skin, "subtitle");
         centerTable.add(langLabel).padTop(20).row();
@@ -179,7 +178,6 @@ public class SettingsMenuScreen extends AbstractScreen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 LanguageManager.toggle();
-                // Rebuild this screen so every label switches language instantly.
                 uiManager.setScreen(new SettingsMenuScreen());
             }
         });

@@ -118,7 +118,6 @@ public class Player extends Entity{
     private int lastWallSide = 0;
     private static final float WALL_GRACE_DURATION = 0.15f;
 
-
     private Vector2 respawnPosition = new Vector2(0, GROUND_Y);
     public boolean isDying = false;
     private float deathTimer = 0f;

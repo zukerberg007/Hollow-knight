@@ -19,9 +19,8 @@ public class SaveManager {
         return Gdx.files.local("save_slot_" + slotIndex + ".json");
     }
 
-    // --- FIX: Accept the existing GameData object so we don't wipe playtime/deaths! ---
     public static void saveGame(GameData data, Player player, Zote zote) {
-        if (data == null) return; // Safety check
+        if (data == null) return;
 
         data.playerX = player.position.x;
         data.heightY = player.position.y;

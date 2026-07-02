@@ -20,9 +20,6 @@ public class AreaMusicManager {
         }
     }
 
-    // World-x boundaries between areas (map is 25600px wide):
-    // Green Path tiles end around x=5300 and Crossroads props begin around x=6000;
-    // mine/crystal tiles take over from about x=20800 onward.
     private static final float GREEN_PATH_MAX_X = 5900f;
     private static final float CRYSTAL_PEAK_MIN_X = 20800f;
 
@@ -66,7 +63,6 @@ public class AreaMusicManager {
     }
 
     private void switchTo(Area area) {
-        // If a previous crossfade is still running, cut its old track off now.
         if (fadingOutTrack != null) {
             fadingOutTrack.stop();
         }

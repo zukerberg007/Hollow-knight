@@ -17,18 +17,15 @@ public class Zote extends Entity {
     public enum State { IDLE, TALKING, ANGRY }
     public State state = State.IDLE;
 
-    // --- FIX: Separated the animation timer from the chase timer! ---
     public float stateTimer = 0f;
     public float angryTimer = 0f;
 
-    public float direction = -1f; // Starts facing left
+    public float direction = -1f;
     private Player player;
 
     public int mainDialogueIndex = 0;
     public boolean hasFinishedMainDialogue = false;
 
-    // Localization keys; resolve with LanguageManager.t() at display time so the
-    // dialogue follows the currently selected language.
     public final String[] mainDialogues = {
         "zote.main.0",
         "zote.main.1",
@@ -57,8 +54,8 @@ public class Zote extends Entity {
     public boolean takeDamage(float dmg, float sourceX) {
         if (state != State.ANGRY) {
             state = State.ANGRY;
-            angryTimer = 3f; // Chase for exactly 3 seconds
-            stateTimer = 0f; // Reset animation to frame 1
+            angryTimer = 3f;
+            stateTimer = 0f;
             direction = (sourceX > bounds.x) ? 1f : -1f;
 
             if (GameAssetManager.zoteAttackSound != null) {
@@ -73,9 +70,8 @@ public class Zote extends Entity {
         super.update(delta, blocks);
 
         if (state == State.ANGRY) {
-            angryTimer -= delta; // Only count down the chase timer!
+            angryTimer -= delta;
 
-            // Flail and run towards the player!
             direction = (player.position.x > bounds.x) ? 1f : -1f;
             bounds.x += 180f * direction * delta;
 
@@ -88,7 +84,7 @@ public class Zote extends Entity {
 
     @Override
     public void render(SpriteBatch batch) {
-        stateTimer += Gdx.graphics.getDeltaTime(); // Always count UP for smooth animations!
+        stateTimer += Gdx.graphics.getDeltaTime();
         Animation<TextureRegion> anim;
 
         if (state == State.ANGRY) {

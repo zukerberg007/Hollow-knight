@@ -22,7 +22,7 @@ public class GuideMenuScreen extends AbstractScreen {
         mainTable.top();
 
         Label title = new Label(t("guide.title"), skin, "title");
-        title.setFontScale(1.5f); // Make it massive!
+        title.setFontScale(1.5f);
         mainTable.add(title).padTop(40).padBottom(30).row();
 
         Table contentTable = new Table();
@@ -76,7 +76,6 @@ public class GuideMenuScreen extends AbstractScreen {
 
         mainTable.add(mainScroll).expand().fill().pad(20).row();
 
-        // --- CONSISTENCY FIX: Use the Hover Button ---
         Table backBtn = createHoverButton(t("common.backToMenu"), new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -112,6 +111,6 @@ public class GuideMenuScreen extends AbstractScreen {
 
         Label descLabel = new Label(description, skin);
         descLabel.setWrap(true);
-        table.add(descLabel).growX().left().padBottom(25).padLeft(15).row(); // Increased bottom padding slightly
+        table.add(descLabel).growX().left().padBottom(25).padLeft(15).row();
     }
 }

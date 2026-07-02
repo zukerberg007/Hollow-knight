@@ -28,7 +28,6 @@ public class Mosscreep extends Entity {
     protected float knockbackTimer = 0f;
     protected float knockbackSpeed = 0f;
 
-
     private static final float TURN_DURATION = 0.2f;
     private static final float DEATH_AIR_DURATION = 0.3f;
     private static final float DEATH_LANDING_DURATION = 0.2f;
@@ -37,8 +36,8 @@ public class Mosscreep extends Entity {
     private final float maxHealth;
     private final float respawnX, respawnY;
     private boolean playerHasLeft = false;
-    private static final float RESPAWN_FAR_DIST = 1500f;   // player this far = "left the room"
-    private static final float RESPAWN_NEAR_DIST = 1200f;  // ...then back within this = respawn
+    private static final float RESPAWN_FAR_DIST = 1500f;
+    private static final float RESPAWN_NEAR_DIST = 1200f;
 
     private final float drawW = 140f, drawH = 120f;
     private final float drawOffsetX = -30f;
@@ -160,7 +159,7 @@ public class Mosscreep extends Entity {
         }
 
         float frontX = (direction > 0) ? bounds.x + bounds.width : bounds.x - 4;
-        float frontY = bounds.y; // enemy's feet level
+        float frontY = bounds.y;
 
         Rectangle wallCheck = new Rectangle(frontX, frontY + 2, 4, bounds.height - 4);
         if (isOverlappingBlock(wallCheck, blocks)) {
@@ -170,7 +169,6 @@ public class Mosscreep extends Entity {
 
         Rectangle groundCheck = new Rectangle(frontX, frontY - 2, 4, 3);
         if (!isOverlappingBlock(groundCheck, blocks)) {
-            // No ground ahead -> cliff
             changeDirection();
             return;
         }
@@ -208,9 +206,9 @@ public class Mosscreep extends Entity {
             playerHasLeft = true;
         } else if (playerHasLeft && dist < RESPAWN_NEAR_DIST) {
             if (!alive) {
-                respawn(); // only dead enemies come back; living ones must not teleport
+                respawn();
             } else {
-                playerHasLeft = false; // re-arm: a later death needs a fresh leave-and-return
+                playerHasLeft = false;
             }
         }
     }

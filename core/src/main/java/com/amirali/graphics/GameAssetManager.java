@@ -96,7 +96,7 @@ public class GameAssetManager {
         ScrollPane.ScrollPaneStyle scrollStyle = skin.get(ScrollPane.ScrollPaneStyle.class);
         scrollStyle.background = null;
 
-        Texture trackTex = new Texture(Gdx.files.internal("ui/background.png")); // Use your exact file name
+        Texture trackTex = new Texture(Gdx.files.internal("ui/background.png"));
         trackTex.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
         scrollStyle.vScroll = new TextureRegionDrawable(new TextureRegion(trackTex));
 

@@ -22,10 +22,8 @@ public class CrystalGuardian extends Entity {
     private float runTimer = 0f;
     private float direction = 1f;
 
-
     private float enrageSpeed = 450f;
     private float evadeSpeed = 100f;
-
 
     private static final float EVADE_DURATION = 0.5f;
     private static final float SHOOT_DURATION = 0.5f;
@@ -164,7 +162,7 @@ public class CrystalGuardian extends Entity {
                 }
                 break;
             case DEATH_AIR:
-                bounds.y -= 400f * delta; // Fall to the ground
+                bounds.y -= 400f * delta;
                 boolean hitGround = false;
                 for (SolidBlock b : blocks) {
                     if (b.isDeadly) continue;
@@ -329,9 +327,9 @@ public class CrystalGuardian extends Entity {
             playerHasLeft = true;
         } else if (playerHasLeft && dist < RESPAWN_NEAR_DIST) {
             if (!alive) {
-                respawn(); // only dead enemies come back; living ones must not teleport
+                respawn();
             } else {
-                playerHasLeft = false; // re-arm: a later death needs a fresh leave-and-return
+                playerHasLeft = false;
             }
         }
     }

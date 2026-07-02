@@ -123,7 +123,6 @@ public class FalseKnight extends Entity {
     private final Array<Shockwave> shockwaves = new Array<>();
     private static Texture pixel;
 
-
     public FalseKnight(float x, float y, float health) {
         super(x, y, BODY_W, BODY_H, health);
         this.maxHealth = health;
@@ -330,7 +329,6 @@ public class FalseKnight extends Entity {
         if (stateTimer >= CHARGE_ANTIC_T) {
             chargeDir = facingRight ? 1 : -1;
             wallBonked = false;
-            // --- ADDED: Small shake when starting any move ---
             requestShake(10f);
             setState(State.CHARGE);
         }
@@ -359,7 +357,6 @@ public class FalseKnight extends Entity {
             velocity.x = dir * LEAP_VX * (enraged ? 1.25f : 1f);
             velocity.y = LEAP_VY;
             onGround = false;
-            // --- ADDED: Small shake when starting any move ---
             requestShake(10f);
             setState(State.LEAP_AIR);
         }
@@ -372,7 +369,6 @@ public class FalseKnight extends Entity {
         onGround = false;
         lastMove = State.DEF_LEAP_AIR;
         sameMoveStreak = 1;
-        // --- ADDED: Small shake when starting any move ---
         requestShake(10f);
         setState(State.DEF_LEAP_AIR);
     }
@@ -397,7 +393,6 @@ public class FalseKnight extends Entity {
             velocity.x = dir * POWER_VX;
             velocity.y = POWER_VY;
             onGround = false;
-            // --- ADDED: Small shake when starting any move ---
             requestShake(12f);
             setState(State.POWER_AIR);
         }
@@ -565,7 +560,6 @@ public class FalseKnight extends Entity {
                 return false;
         }
     }
-
 
     public Rectangle getMaceHitbox() {
         float w = 200f, h = 130f;

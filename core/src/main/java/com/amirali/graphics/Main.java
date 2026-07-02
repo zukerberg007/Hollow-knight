@@ -4,7 +4,6 @@ import com.amirali.graphics.views.screens.MainMenuScreen;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.utils.ScreenUtils;
 
-
 public class Main extends Game {
     @Override
     public void create() {
@@ -14,7 +13,6 @@ public class Main extends Game {
         BrightnessManager.init();
         BackgroundManager.init();
         uiManager.init(this);
-
 
         MainMenuScreen mainMenuScreen = new MainMenuScreen();
         setScreen(mainMenuScreen);

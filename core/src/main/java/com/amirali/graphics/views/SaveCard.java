@@ -26,12 +26,10 @@ public class SaveCard extends Table {
         Label numberLabel = new Label(slotIndex + ". ", skin, "title");
         add(numberLabel).padRight(20).left();
 
-        // If data is null, the save file doesn't exist yet!
         if (data == null) {
             Label newGameLabel = new Label(t("save.newGame"), skin, "subtitle");
             add(newGameLabel).expandX().left();
         } else {
-            // Apply the location background image
             if (GameAssetManager.forgottenCrossroadsBg != null) {
                 setBackground(new TextureRegionDrawable(new TextureRegion(GameAssetManager.forgottenCrossroadsBg)));
             } else {
@@ -42,7 +40,6 @@ public class SaveCard extends Table {
             Image orb = new Image(GameAssetManager.FULL_ORB);
             statsTable.add(orb).size(80, 75).padRight(15);
 
-            // Draw the actual number of masks saved in the JSON file
             for (int i = 0; i < data.maxMasks; i++) {
                 Image mask = new Image(GameAssetManager.filledMask);
                 statsTable.add(mask).size(30, 30).padRight(5);
@@ -68,10 +65,9 @@ public class SaveCard extends Table {
             clearBtn.addListener(new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
-                    event.cancel(); // Stop the card from clicking and loading the map
+                    event.cancel();
                     SaveManager.deleteSave(slotIndex);
 
-                    // Visually reset the card to "NEW GAME" instantly
                     clearChildren();
                     setBackground((TextureRegionDrawable) null);
                     Label numLabel = new Label(slotIndex + ". ", skin, "title");

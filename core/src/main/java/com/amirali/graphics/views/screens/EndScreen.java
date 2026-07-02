@@ -22,14 +22,13 @@ public class EndScreen extends AbstractScreen {
 
     @Override
     protected boolean showBackground() {
-        return false; // Will use the solid black screen of AbstractScreen
+        return false;
     }
 
     @Override
     public void show() {
         super.show();
 
-        // 1. Play the Custom Win Music
         if (GameAssetManager.winMusic != null) {
             GameAssetManager.winMusic.setLooping(false);
             GameAssetManager.winMusic.setVolume(0.8f);
@@ -44,7 +43,6 @@ public class EndScreen extends AbstractScreen {
         title.setColor(Color.GOLD);
         mainTable.add(title).padBottom(40).row();
 
-        // 2. Format the stats
         int minutes = (int) (finalData.playTime / 60);
         int seconds = (int) (finalData.playTime % 60);
         String timeString = String.format("%02d:%02d", minutes, seconds);
@@ -57,13 +55,11 @@ public class EndScreen extends AbstractScreen {
         mainTable.add(deathsLabel).padBottom(15).row();
         mainTable.add(killsLabel).padBottom(50).row();
 
-        // 3. Navigation Buttons
         Table restartBtn = createHoverButton(t("end.restart"), new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 if (GameAssetManager.winMusic != null) GameAssetManager.winMusic.stop();
 
-                // Clear the slot and start fresh on the same slot
                 com.amirali.graphics.SaveManager.deleteSave(finalData.slotIndex);
                 Game game = new Game();
                 uiManager.setScreen(new GameScreen(game, null, finalData.slotIndex));

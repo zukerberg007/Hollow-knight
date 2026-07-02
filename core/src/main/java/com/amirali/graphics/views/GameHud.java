@@ -80,7 +80,7 @@ public class GameHud {
         if (ratio > 0.001f) {
             int texHeight = GameAssetManager.soulOrb.getHeight();
             int srcH = Math.round(texHeight * ratio);
-            int srcY = texHeight - srcH;   // start from bottom
+            int srcY = texHeight - srcH;
 
             TextureRegion fill = new TextureRegion(
                 GameAssetManager.soulOrb,

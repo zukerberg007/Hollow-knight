@@ -17,13 +17,6 @@ import java.util.Map;
 
 import static com.amirali.graphics.LanguageManager.t;
 
-/**
- * Builds a self-contained controls panel: one "Action: [key]" row per rebindable action plus a
- * "Reset Controls" button. Click a key button, then press any key to rebind it (Esc cancels).
- *
- * The capture works by briefly swapping the global input processor for a one-shot adapter and then
- * restoring it, so the exact same panel works on a full Screen and inside an in-game Modal.
- */
 public class ControlsRebinder {
 
     public static Table buildControls(final Skin skin) {
@@ -49,10 +42,10 @@ public class ControlsRebinder {
                         @Override
                         public boolean keyDown(int keycode) {
                             if (keycode != Input.Keys.ESCAPE) {
-                                KeyBindings.setKey(a, keycode); // also persists
+                                KeyBindings.setKey(a, keycode);
                             }
                             keyBtn.setText(KeyBindings.keyName(KeyBindings.getKey(a)));
-                            Gdx.input.setInputProcessor(previous); // hand control back
+                            Gdx.input.setInputProcessor(previous);
                             return true;
                         }
                     });

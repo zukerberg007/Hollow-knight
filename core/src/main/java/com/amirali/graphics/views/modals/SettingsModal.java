@@ -18,12 +18,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
-/**
- * In-game settings overlay, opened from the Pause menu. Because it's a Modal (not a Screen), the
- * live GameScreen stays paused underneath, so "Back" returns to the pause menu and then the game.
- *
- * Brightness and controls apply globally, so they take effect immediately while playing.
- */
 public class SettingsModal extends Modal {
 
     public SettingsModal() {
@@ -38,7 +32,6 @@ public class SettingsModal extends Modal {
         Table content = new Table();
         content.defaults().space(10).center();
 
-        // --- VIDEO / BRIGHTNESS ---
         content.add(new Label(t("settings.video"), skin, "subtitle")).padTop(5).row();
         Table brightTable = new Table();
         final Slider brightSlider = new Slider(0.1f, 1f, 0.1f, false, skin);
@@ -53,19 +46,15 @@ public class SettingsModal extends Modal {
         brightTable.add(brightSlider).width(150);
         content.add(brightTable).row();
 
-        // --- CONTROLS ---
         content.add(new Label(t("settings.controls"), skin, "subtitle")).padTop(15).row();
         content.add(ControlsRebinder.buildControls(skin)).row();
 
-        // --- LANGUAGE ---
         content.add(new Label(t("settings.language"), skin, "subtitle")).padTop(15).row();
         final TextButton languageBtn = new TextButton(t("settings.languageBtn") + ": " + LanguageManager.current().name(), skin);
         languageBtn.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent e, float x, float y) {
                 LanguageManager.toggle();
-                // Rebuild the whole modal stack (pause menu + this settings overlay)
-                // so both are retranslated instantly. The game stays paused underneath.
                 uiManager.getScreen().getModalStack().clearChildren();
                 new PauseModal().show();
                 new SettingsModal().show();

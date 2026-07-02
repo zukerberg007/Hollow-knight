@@ -9,7 +9,6 @@ import java.util.Locale;
 public class LanguageManager {
 
     public enum Language {
-        // EN maps to ROOT so the base file is always used, regardless of the system locale.
         EN(Locale.ROOT),
         FR(Locale.forLanguageTag("fr"));
 

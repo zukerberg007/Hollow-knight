@@ -1,4 +1,3 @@
-// com/amirali/graphics/KeyBindings.java
 package com.amirali.graphics;
 
 import com.badlogic.gdx.Gdx;

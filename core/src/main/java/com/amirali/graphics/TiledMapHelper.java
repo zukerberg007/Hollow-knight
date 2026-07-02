@@ -30,7 +30,6 @@ public class TiledMapHelper {
             if (object instanceof RectangleMapObject) {
                 String name = object.getName();
 
-                // --- FIX: Ignore the BossArena and Spawn points so we don't collide with them! ---
                 if (name != null && (
                     name.equals("BreakableWall") ||
                         name.equals("VoidHeart") ||

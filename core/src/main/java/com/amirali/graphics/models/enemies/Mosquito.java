@@ -30,12 +30,10 @@ public class Mosquito extends Entity {
     private float targetDirection = 1f;
     private Vector2 targetPosition = new Vector2();
 
-
     private float aggroRange = 350f;
     private float chargeSpeed = 450f;
     private float chargeDuration = 1.5f;
     private float turnDuration = 0.2f;
-
 
     private float attackCooldownTimer = 0f;
     private float attackCooldown = 1.5f;
@@ -58,7 +56,6 @@ public class Mosquito extends Entity {
 
     private float drawOffsetX = 0f;
     private float drawOffsetY = 0f;
-
 
     public Mosquito(float x, float y, float w, float h, float health) {
         super(x, y, w, h, health);
@@ -246,9 +243,9 @@ public class Mosquito extends Entity {
             playerHasLeft = true;
         } else if (playerHasLeft && dist < RESPAWN_NEAR_DIST) {
             if (!alive) {
-                respawn(); // only dead enemies come back; living ones must not teleport
+                respawn();
             } else {
-                playerHasLeft = false; // re-arm: a later death needs a fresh leave-and-return
+                playerHasLeft = false;
             }
         }
     }
@@ -362,7 +359,6 @@ public class Mosquito extends Entity {
 
         batch.setColor(Color.WHITE);
     }
-
 
     @Override
     protected float invincibleTime() { return 0f; }

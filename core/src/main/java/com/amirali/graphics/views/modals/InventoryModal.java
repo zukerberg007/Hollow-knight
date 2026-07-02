@@ -29,14 +29,11 @@ public class InventoryModal extends Modal {
         title.setFontScale(1.3f);
         add(title).colspan(4).center().row();
 
-        // 1. Notch usage tracker
         notchLabel = new Label("", skin);
         updateNotchText();
         add(notchLabel).colspan(4).center().padBottom(15).row();
 
-        // 2. Charms Grid
         Table charmsGrid = new Table();
-        // CHANGED: Made the grid cells square (e.g., 60x60 or 70x70) for images
         charmsGrid.defaults().space(15).size(70, 70);
 
         addCharmButton(charmsGrid, 1);
@@ -53,13 +50,11 @@ public class InventoryModal extends Modal {
 
         add(charmsGrid).colspan(4).center().row();
 
-        // 3. Charm description area
         descLabel = new Label(t("inv.hint"), skin);
         descLabel.setWrap(true);
         descLabel.setColor(Color.LIGHT_GRAY);
         add(descLabel).colspan(4).width(400).padTop(15).center().row();
 
-        // Close Button
         TextButton closeBtn = new TextButton(t("inv.close"), skin);
         closeBtn.addListener(new ClickListener() {
             @Override
@@ -71,13 +66,11 @@ public class InventoryModal extends Modal {
     }
 
     private void addCharmButton(Table grid, final int charmId) {
-        // Load the specific PNG for this charm
         Texture charmTex = new Texture(Gdx.files.internal("charm_" + charmId + ".png"));
         final Image charmImg = new Image(charmTex);
 
         boolean isEquipped = checkCharmStatus(charmId);
 
-        // Dim the image if unequipped, light it up if equipped
         charmImg.setColor(isEquipped ? Color.WHITE : Color.DARK_GRAY);
 
         charmImg.addListener(new ClickListener() {
@@ -89,13 +82,12 @@ public class InventoryModal extends Modal {
                 if (currentlyEquipped) {
                     setCharmStatus(charmId, false);
                     player.currentNotchesUsed--;
-                    charmImg.setColor(Color.DARK_GRAY); // Dim it
+                    charmImg.setColor(Color.DARK_GRAY);
                 } else {
-                    // Equipping requires available notches
                     if (player.currentNotchesUsed < Player.MAX_NOTCHES) {
                         setCharmStatus(charmId, true);
                         player.currentNotchesUsed++;
-                        charmImg.setColor(Color.WHITE); // Light it up
+                        charmImg.setColor(Color.WHITE);
                     } else {
                         description = t("inv.notEnough") + "\n\n" + description;
                     }
