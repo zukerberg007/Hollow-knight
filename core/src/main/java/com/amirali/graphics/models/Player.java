@@ -119,6 +119,8 @@ public class Player extends Entity{
     private static final float WALL_GRACE_DURATION = 0.15f;
 
     private Vector2 respawnPosition = new Vector2(0, GROUND_Y);
+    private float damageFlashTimer = 0f;
+    private static final float DAMAGE_FLASH_INTERVAL = 0.08f;
     public boolean isDying = false;
     private float deathTimer = 0f;
     private static final float DEATH_ANIM_DURATION = 1.8f;
@@ -186,6 +188,7 @@ public class Player extends Entity{
     @Override
     public void update(float delta, Array<SolidBlock> blocks) {
         super.update(delta, blocks);
+        if (damageFlashTimer > 0f) damageFlashTimer -= delta;
         AnimationType previousAnimation = currentAnimation;
 
         if (isNoclip) {
@@ -609,6 +612,7 @@ public class Player extends Entity{
         if (GameAssetManager.wallSlideSound != null) GameAssetManager.wallSlideSound.stop();
 
         invincibleTimer = INVINCIBLE_TIME;
+        damageFlashTimer = INVINCIBLE_TIME;
         cancelFocus();
 
         requestShake(25f, 0.4f);
@@ -1008,6 +1012,11 @@ public class Player extends Entity{
     public int getSlashFrame() { return slashFrame; }
     public void setJumpHeld(boolean held) {
         jumpHeld = held;
+    }
+
+    public boolean isDamageFlashVisible() {
+        if (damageFlashTimer <= 0f || isDying) return true;
+        return ((int) (damageFlashTimer / DAMAGE_FLASH_INTERVAL)) % 2 == 0;
     }
 
     public void setRespawnPosition(Vector2 pos) {

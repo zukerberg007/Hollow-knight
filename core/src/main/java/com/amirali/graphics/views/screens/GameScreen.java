@@ -43,6 +43,8 @@ public class GameScreen extends AbstractScreen {
     private SpriteBatch batch;
     private Camera camera;
     private ScreenViewport viewport;
+    private float mapPixelWidth, mapPixelHeight;
+    private static final float CAMERA_LERP = 8f;
     private ShapeRenderer shapeRenderer;
 
     private int[] backgroundLayers;
@@ -111,6 +113,13 @@ public class GameScreen extends AbstractScreen {
         mapHelper = new TiledMapHelper();
         TiledMap map = mapHelper.loadMap("map/hollow.tmx");
         renderer = new OrthogonalTiledMapRenderer(map);
+
+        int mapW = map.getProperties().get("width", Integer.class);
+        int mapH = map.getProperties().get("height", Integer.class);
+        int tileW = map.getProperties().get("tilewidth", Integer.class);
+        int tileH = map.getProperties().get("tileheight", Integer.class);
+        mapPixelWidth = mapW * tileW;
+        mapPixelHeight = mapH * tileH;
 
         Array<Integer> bgList = new Array<>();
         int bg2 = map.getLayers().getIndex("background2");
@@ -181,6 +190,9 @@ public class GameScreen extends AbstractScreen {
         camera = new OrthographicCamera();
 
         viewport = new ScreenViewport(camera);
+        viewport.update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        camera.position.set(game.player.position, 0);
+        camera.update();
         shapeRenderer = new ShapeRenderer();
 
         rockParticles = new ParticleEffect();
@@ -948,8 +960,11 @@ public class GameScreen extends AbstractScreen {
         game.player.spriteDrawnW = drawnW;
         game.player.spriteDrawnH = drawnH;
 
-        camera.position.set(game.player.position, 0);
+        float smoothing = 1f - (float) Math.exp(-CAMERA_LERP * delta);
+        camera.position.x += (game.player.position.x - camera.position.x) * smoothing;
+        camera.position.y += (game.player.position.y - camera.position.y) * smoothing;
         if (bossFightActive && bossArena != null) clampCameraToArena();
+        else clampCameraToMap();
         if (shakeTime > 0f) {
             shakeTime -= delta;
 
@@ -978,8 +993,10 @@ public class GameScreen extends AbstractScreen {
 
         if (game.player.isDashing && game.player.hasSharpShadow) batch.setColor(Color.DARK_GRAY);
 
-        batch.draw(keyFrame, game.player.position.x + drawOffsetX, game.player.position.y, w / 2, 0, w, h,
-            game.player.facingRight ? -scale : scale, scale, 0);
+        if (game.player.isDamageFlashVisible()) {
+            batch.draw(keyFrame, game.player.position.x + drawOffsetX, game.player.position.y, w / 2, 0, w, h,
+                game.player.facingRight ? -scale : scale, scale, 0);
+        }
 
         batch.setColor(Color.WHITE);
 
@@ -1270,5 +1287,15 @@ public class GameScreen extends AbstractScreen {
             : bossArena.x + bossArena.width / 2f;
         camera.position.y = (minY <= maxY) ? MathUtils.clamp(camera.position.y, minY, maxY)
             : bossArena.y + bossArena.height / 2f;
+    }
+
+    private void clampCameraToMap() {
+        float halfW = camera.viewportWidth / 2f, halfH = camera.viewportHeight / 2f;
+        float minX = halfW, maxX = mapPixelWidth - halfW;
+        float minY = halfH, maxY = mapPixelHeight - halfH;
+        camera.position.x = (minX <= maxX) ? MathUtils.clamp(camera.position.x, minX, maxX)
+            : mapPixelWidth / 2f;
+        camera.position.y = (minY <= maxY) ? MathUtils.clamp(camera.position.y, minY, maxY)
+            : mapPixelHeight / 2f;
     }
 }
