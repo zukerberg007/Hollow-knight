@@ -12,6 +12,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
+import static com.amirali.graphics.LanguageManager.t;
+
 public class AchievementsMenuScreen extends AbstractScreen {
 
     @Override
@@ -25,7 +27,7 @@ public class AchievementsMenuScreen extends AbstractScreen {
         mainTable.setFillParent(true);
         mainTable.top();
 
-        Label title = new Label("ACHIEVEMENTS", skin, "title");
+        Label title = new Label(t("ach.title"), skin, "title");
         title.setFontScale(1.5f);
         mainTable.add(title).padTop(40).padBottom(30).row();
 
@@ -33,20 +35,20 @@ public class AchievementsMenuScreen extends AbstractScreen {
         listTable.top();
         listTable.defaults().padBottom(15).fillX();
 
-        // Read dynamically from Preferences
-        addAchievement(listTable, "Completion", "Finish the game.",
+        // Read dynamically from Preferences (pref keys stay English; only display text is localized)
+        addAchievement(listTable, t("ach.completion"), t("ach.completion.desc"),
             prefs.getBoolean("Completion", false), "Achievements/achievement__0000_100_complete.png");
 
-        addAchievement(listTable, "Speedrun", "Finish the game in under 10 minutes.",
+        addAchievement(listTable, t("ach.speedrun"), t("ach.speedrun.desc"),
             prefs.getBoolean("Speedrun", false), "Achievements/achievement_fast_finish.png");
 
-        addAchievement(listTable, "True Hunter", "Kill all enemy types in the game.",
+        addAchievement(listTable, t("ach.trueHunter"), t("ach.trueHunter.desc"),
             prefs.getBoolean("True Hunter", false), "Achievements/achievement_Hunter_Journal.png");
 
-        addAchievement(listTable, "Defeat False Knight", "Defeat the False Knight boss.",
+        addAchievement(listTable, t("ach.falseKnight"), t("ach.falseKnight.desc"),
             prefs.getBoolean("Defeat False Knight", false), "Achievements/achievement_false_knight.png");
 
-        addAchievement(listTable, "Soul Vessel", "Reach max capacity (99 SOUL) for the first time.",
+        addAchievement(listTable, t("ach.soulVessel"), t("ach.soulVessel.desc"),
             prefs.getBoolean("Soul Vessel", false), "Achievements/achievement__0018_vessel_01.png");
 
         ScrollPane scrollPane = new ScrollPane(listTable, skin);
@@ -55,7 +57,7 @@ public class AchievementsMenuScreen extends AbstractScreen {
         scrollPane.setVariableSizeKnobs(false);
 
         mainTable.add(scrollPane).width(550).height(400).padBottom(30).row();
-        Table backBtn = createHoverButton("Back to Main Menu", new ClickListener() {
+        Table backBtn = createHoverButton(t("common.backToMenu"), new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 uiManager.setScreen(new MainMenuScreen());
@@ -85,7 +87,7 @@ public class AchievementsMenuScreen extends AbstractScreen {
 
         Color titleColor = isUnlocked ? Color.GOLD : Color.DARK_GRAY;
         Color descColor = isUnlocked ? Color.WHITE : Color.LIGHT_GRAY;
-        String statusIcon = isUnlocked ? "[UNLOCKED] " : "[LOCKED] ";
+        String statusIcon = (isUnlocked ? t("ach.unlocked") : t("ach.locked")) + " ";
 
         Table textTable = new Table();
         Label titleLabel = new Label(statusIcon + title, skin, "subtitle");

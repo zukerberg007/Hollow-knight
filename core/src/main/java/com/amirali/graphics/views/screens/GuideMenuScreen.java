@@ -9,6 +9,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
+import static com.amirali.graphics.LanguageManager.t;
+
 public class GuideMenuScreen extends AbstractScreen {
 
     @Override
@@ -19,7 +21,7 @@ public class GuideMenuScreen extends AbstractScreen {
         mainTable.setFillParent(true);
         mainTable.top();
 
-        Label title = new Label("GUIDE", skin, "title");
+        Label title = new Label(t("guide.title"), skin, "title");
         title.setFontScale(1.5f); // Make it massive!
         mainTable.add(title).padTop(40).padBottom(30).row();
 
@@ -28,41 +30,41 @@ public class GuideMenuScreen extends AbstractScreen {
 
         Table leftCol = new Table();
         leftCol.top().left();
-        Label controlsTitle = new Label("CONTROLS (Dynamic)", skin, "subtitle");
+        Label controlsTitle = new Label(t("guide.controls"), skin, "subtitle");
         leftCol.add(controlsTitle).colspan(2).left().padBottom(20).row();
 
-        addControlRow(leftCol, "Move Left", KeyBindings.keyName(KeyBindings.MOVE_LEFT));
-        addControlRow(leftCol, "Move Right", KeyBindings.keyName(KeyBindings.MOVE_RIGHT));
-        addControlRow(leftCol, "Jump", KeyBindings.keyName(KeyBindings.JUMP));
-        addControlRow(leftCol, "Attack (Nail)", KeyBindings.keyName(KeyBindings.ATTACK));
-        addControlRow(leftCol, "Dash", KeyBindings.keyName(KeyBindings.DASH));
-        addControlRow(leftCol, "Focus (Heal)", KeyBindings.keyName(KeyBindings.FOCUS));
-        addControlRow(leftCol, "Inventory", KeyBindings.keyName(KeyBindings.INVENTORY));
+        addControlRow(leftCol, t("action.move_left"), KeyBindings.keyName(KeyBindings.MOVE_LEFT));
+        addControlRow(leftCol, t("action.move_right"), KeyBindings.keyName(KeyBindings.MOVE_RIGHT));
+        addControlRow(leftCol, t("action.jump"), KeyBindings.keyName(KeyBindings.JUMP));
+        addControlRow(leftCol, t("guide.attackNail"), KeyBindings.keyName(KeyBindings.ATTACK));
+        addControlRow(leftCol, t("action.dash"), KeyBindings.keyName(KeyBindings.DASH));
+        addControlRow(leftCol, t("guide.focusHeal"), KeyBindings.keyName(KeyBindings.FOCUS));
+        addControlRow(leftCol, t("action.inventory"), KeyBindings.keyName(KeyBindings.INVENTORY));
 
         leftCol.add(new Label("", skin)).colspan(2).height(40).row();
 
-        Label cheatsTitle = new Label("CHEAT CODES (Hold Ctrl)", skin, "subtitle");
+        Label cheatsTitle = new Label(t("guide.cheats"), skin, "subtitle");
         leftCol.add(cheatsTitle).colspan(2).left().padBottom(20).row();
 
-        addCheatRow(leftCol, "Ctrl + K", "Insta-kill / Slow time");
-        addCheatRow(leftCol, "Ctrl + G", "God Mode (invincible)");
-        addCheatRow(leftCol, "Ctrl + N", "Noclip / Spectator");
-        addCheatRow(leftCol, "Ctrl + B", "Teleport to Boss arena");
-        addCheatRow(leftCol, "Ctrl + M", "Max Soul + Emergency Heal");
+        addCheatRow(leftCol, "Ctrl + K", t("guide.cheat.k"));
+        addCheatRow(leftCol, "Ctrl + G", t("guide.cheat.g"));
+        addCheatRow(leftCol, "Ctrl + N", t("guide.cheat.n"));
+        addCheatRow(leftCol, "Ctrl + B", t("guide.cheat.b"));
+        addCheatRow(leftCol, "Ctrl + M", t("guide.cheat.m"));
 
         Table rightCol = new Table();
         rightCol.top().left();
-        Label abilitiesTitle = new Label("ABILITIES & MECHANICS", skin, "subtitle");
+        Label abilitiesTitle = new Label(t("guide.abilities"), skin, "subtitle");
         rightCol.add(abilitiesTitle).left().padBottom(20).row();
 
-        addAbilityRow(rightCol, "NAIL ATTACK", "Press " + KeyBindings.keyName(KeyBindings.ATTACK) + " to swing your nail. Hitting enemies grants 11 SOUL.");
-        addAbilityRow(rightCol, "JUMP & DOUBLE JUMP", "Press " + KeyBindings.keyName(KeyBindings.JUMP) + " to jump. Press again mid-air for double jump. Hold jump key for higher jump.");
-        addAbilityRow(rightCol, "DASH", "Press " + KeyBindings.keyName(KeyBindings.DASH) + " to dash horizontally. Short cooldown. Grants invincibility during dash.");
-        addAbilityRow(rightCol, "FOCUS / HEAL", "Hold " + KeyBindings.keyName(KeyBindings.FOCUS) + " while standing still. After 1.5 sec, consumes 33 SOUL to restore 1 health mask.");
-        addAbilityRow(rightCol, "SOUL VESSEL", "Max 99 SOUL. Displayed as a circular orb. Gain SOUL by hitting enemies.");
-        addAbilityRow(rightCol, "HEALTH MASKS", "Max 5 masks. Each enemy hit or hazard reduces one. After taking damage, you are invincible for 1 second.");
-        addAbilityRow(rightCol, "DOWNWARD POGO", "While airborne, press DOWN + ATTACK to strike downward. Bouncing off spikes or enemies resets dash and jump.");
-        addAbilityRow(rightCol, "WALL CLING & JUMP", "Hold toward a wall while airborne to slide down slowly. Press jump to leap off the wall.");
+        addAbilityRow(rightCol, t("guide.ability.nail"), t("guide.ability.nail.desc", KeyBindings.keyName(KeyBindings.ATTACK)));
+        addAbilityRow(rightCol, t("guide.ability.jump"), t("guide.ability.jump.desc", KeyBindings.keyName(KeyBindings.JUMP)));
+        addAbilityRow(rightCol, t("guide.ability.dash"), t("guide.ability.dash.desc", KeyBindings.keyName(KeyBindings.DASH)));
+        addAbilityRow(rightCol, t("guide.ability.focus"), t("guide.ability.focus.desc", KeyBindings.keyName(KeyBindings.FOCUS)));
+        addAbilityRow(rightCol, t("guide.ability.soul"), t("guide.ability.soul.desc"));
+        addAbilityRow(rightCol, t("guide.ability.masks"), t("guide.ability.masks.desc"));
+        addAbilityRow(rightCol, t("guide.ability.pogo"), t("guide.ability.pogo.desc"));
+        addAbilityRow(rightCol, t("guide.ability.wall"), t("guide.ability.wall.desc"));
 
         contentTable.add(leftCol).width(380).padRight(100).top();
         contentTable.add(rightCol).width(480).top();
@@ -75,7 +77,7 @@ public class GuideMenuScreen extends AbstractScreen {
         mainTable.add(mainScroll).expand().fill().pad(20).row();
 
         // --- CONSISTENCY FIX: Use the Hover Button ---
-        Table backBtn = createHoverButton("Back to Main Menu", new ClickListener() {
+        Table backBtn = createHoverButton(t("common.backToMenu"), new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 uiManager.setScreen(new MainMenuScreen());

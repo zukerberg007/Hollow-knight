@@ -11,6 +11,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
+import static com.amirali.graphics.LanguageManager.t;
+
 public class InventoryModal extends Modal {
 
     private final Player player;
@@ -23,7 +25,7 @@ public class InventoryModal extends Modal {
 
         defaults().space(10).pad(10);
 
-        Label title = new Label("CHARM INVENTORY", skin);
+        Label title = new Label(t("inv.title"), skin);
         title.setFontScale(1.3f);
         add(title).colspan(4).center().row();
 
@@ -37,28 +39,28 @@ public class InventoryModal extends Modal {
         // CHANGED: Made the grid cells square (e.g., 60x60 or 70x70) for images
         charmsGrid.defaults().space(15).size(70, 70);
 
-        addCharmButton(charmsGrid, "Soul Catcher", 1);
-        addCharmButton(charmsGrid, "Dashmaster", 2);
-        addCharmButton(charmsGrid, "Unb. Strength", 3);
-        addCharmButton(charmsGrid, "Quick Slash", 4);
+        addCharmButton(charmsGrid, 1);
+        addCharmButton(charmsGrid, 2);
+        addCharmButton(charmsGrid, 3);
+        addCharmButton(charmsGrid, 4);
 
         charmsGrid.row();
 
-        addCharmButton(charmsGrid, "Quick Focus", 5);
-        addCharmButton(charmsGrid, "Heavy Blow", 6);
-        addCharmButton(charmsGrid, "Sharp Shadow", 7);
-        addCharmButton(charmsGrid, "Void Heart", 8);
+        addCharmButton(charmsGrid, 5);
+        addCharmButton(charmsGrid, 6);
+        addCharmButton(charmsGrid, 7);
+        addCharmButton(charmsGrid, 8);
 
         add(charmsGrid).colspan(4).center().row();
 
         // 3. Charm description area
-        descLabel = new Label("Click on a charm to equip it and see its details.", skin);
+        descLabel = new Label(t("inv.hint"), skin);
         descLabel.setWrap(true);
         descLabel.setColor(Color.LIGHT_GRAY);
         add(descLabel).colspan(4).width(400).padTop(15).center().row();
 
         // Close Button
-        TextButton closeBtn = new TextButton("Close (Press I)", skin);
+        TextButton closeBtn = new TextButton(t("inv.close"), skin);
         closeBtn.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -68,7 +70,7 @@ public class InventoryModal extends Modal {
         add(closeBtn).colspan(4).center().padTop(10);
     }
 
-    private void addCharmButton(Table grid, final String charmName, final int charmId) {
+    private void addCharmButton(Table grid, final int charmId) {
         // Load the specific PNG for this charm
         Texture charmTex = new Texture(Gdx.files.internal("charm_" + charmId + ".png"));
         final Image charmImg = new Image(charmTex);
@@ -95,11 +97,11 @@ public class InventoryModal extends Modal {
                         player.currentNotchesUsed++;
                         charmImg.setColor(Color.WHITE); // Light it up
                     } else {
-                        description = "[NOT ENOUGH NOTCHES! Max 3]\n\n" + description;
+                        description = t("inv.notEnough") + "\n\n" + description;
                     }
                 }
 
-                descLabel.setText(charmName.toUpperCase() + ":\n" + description);
+                descLabel.setText(t("charm." + charmId).toUpperCase() + ":\n" + description);
                 updateNotchText();
             }
         });
@@ -108,7 +110,7 @@ public class InventoryModal extends Modal {
     }
 
     private void updateNotchText() {
-        notchLabel.setText("Notches: " + player.currentNotchesUsed + " / " + Player.MAX_NOTCHES);
+        notchLabel.setText(t("inv.notches", player.currentNotchesUsed, Player.MAX_NOTCHES));
         if (player.currentNotchesUsed >= Player.MAX_NOTCHES) {
             notchLabel.setColor(Color.RED);
         } else {
@@ -144,16 +146,6 @@ public class InventoryModal extends Modal {
     }
 
     private String getCharmDescription(int id) {
-        return switch (id) {
-            case 1 -> "Increases Soul gained from hitting enemies with your Nail.";
-            case 2 -> "Allows the user to dash much more frequently.";
-            case 3 -> "Strengthens the Knight, doubling Nail damage.";
-            case 4 -> "Increases attack speed and reduces slash cooldown.";
-            case 5 -> "Increases the speed of focusing SOUL to heal.";
-            case 6 -> "Increases knockback force applied to enemies.";
-            case 7 -> "Dash through enemies without taking damage while harming them. Increases dash length.";
-            case 8 -> "Boosts spell damage by 50% and unlocks dark void variants.";
-            default -> "";
-        };
+        return (id >= 1 && id <= 8) ? t("charm." + id + ".desc") : "";
     }
 }

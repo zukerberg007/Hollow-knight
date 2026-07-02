@@ -33,6 +33,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import static com.amirali.graphics.LanguageManager.t;
 import static com.amirali.graphics.models.Player.BLAST_DURATION;
 import com.amirali.graphics.models.enemies.FalseKnight;
 import com.badlogic.gdx.math.MathUtils;
@@ -60,7 +61,7 @@ public class GameScreen extends AbstractScreen {
     }
     public void saveCurrentGame() {
         com.amirali.graphics.SaveManager.saveGame(loadedData, game.player, zote);
-        openToast("Game Saved!");
+        openToast(t("toast.saved"));
     }
 
     private OrthogonalTiledMapRenderer renderer;
@@ -274,24 +275,24 @@ public class GameScreen extends AbstractScreen {
                 }
                 game.player.velocity.set(0, 0);
                 game.player.syncBounds();
-                openToast("Cheat Enabled: Teleported to Boss Arena!");
+                openToast(t("toast.cheat.boss"));
             }
             if (Gdx.input.isKeyJustPressed(Input.Keys.N)) {
                 game.player.isNoclip = !game.player.isNoclip;
                 game.player.velocity.set(0, 0);
-                openToast("Noclip Flight Mode: " + (game.player.isNoclip ? "ENABLED (Use Arrows/WASD)" : "DISABLED"));
+                openToast(t(game.player.isNoclip ? "toast.cheat.noclip.on" : "toast.cheat.noclip.off"));
             }
             if (Gdx.input.isKeyJustPressed(Input.Keys.H)) {
                 game.player.masks = game.player.maxMasks;
-                openToast("Cheat Enabled: Emergency Health Restored!");
+                openToast(t("toast.cheat.health"));
             }
             if (Gdx.input.isKeyJustPressed(Input.Keys.M)) {
                 game.player.soul = Player.MAX_SOUL;
-                openToast("Cheat Enabled: Soul Vessel Refilled!");
+                openToast(t("toast.cheat.soul"));
             }
             if (Gdx.input.isKeyJustPressed(Input.Keys.G)) {
                 game.player.isGodMode = !game.player.isGodMode;
-                openToast("God Mode (Invincibility): " + (game.player.isGodMode ? "ENABLED" : "DISABLED"));
+                openToast(t(game.player.isGodMode ? "toast.cheat.god.on" : "toast.cheat.god.off"));
             }
             if (Gdx.input.isKeyJustPressed(Input.Keys.K)) {
                 int killCount = 0;
@@ -299,7 +300,7 @@ public class GameScreen extends AbstractScreen {
                 for (Mosquito m : mosquitoes) { if (m.isAlive()) { m.takeDamage(99f, 0); killCount++; } }
                 for (HuskHornhead h : huskHornheads) { if (h.isAlive()) { h.takeDamage(99f, 0); killCount++; } }
                 for (CrystalGuardian cg : crystalGuardians) { if (cg.isAlive()) { cg.takeDamage(99f, 0); killCount++; } }
-                openToast("Cheat Enabled: Insta-Killed " + killCount + " Enemies on Screen!");
+                openToast(t("toast.cheat.kill", killCount));
             }
         }
     }
@@ -369,11 +370,11 @@ public class GameScreen extends AbstractScreen {
 
             if (killedMoss && killedSkeet && killedHusk && killedCg && !achPrefs.getBoolean("True Hunter", false)) {
                 achPrefs.putBoolean("True Hunter", true); savePrefs = true;
-                openToast("Achievement Unlocked: True Hunter!");
+                openToast(t("toast.ach.trueHunter"));
             }
             if (game.player.soul >= Player.MAX_SOUL && !achPrefs.getBoolean("Soul Vessel", false)) {
                 achPrefs.putBoolean("Soul Vessel", true); savePrefs = true;
-                openToast("Achievement Unlocked: Soul Vessel!");
+                openToast(t("toast.ach.soulVessel"));
             }
 
             // --- FIX: Safely check if False Knight's health hit 0, start the timer ---
@@ -412,7 +413,7 @@ public class GameScreen extends AbstractScreen {
                 if (roomRevealed && game.player.getBounds().overlaps(voidHeartBounds)) {
                     voidHeartCollected = true;
                     game.player.hasVoidHeart = true;
-                    openToast("Acquired: Void Heart Charm!");
+                    openToast(t("toast.voidHeart"));
                 }
             }
 
@@ -440,9 +441,9 @@ public class GameScreen extends AbstractScreen {
                         GameAssetManager.playRandomZoteSound();
 
                         if (!zote.hasFinishedMainDialogue) {
-                            currentDialogueText = zote.mainDialogues[zote.mainDialogueIndex];
+                            currentDialogueText = t(zote.mainDialogues[zote.mainDialogueIndex]);
                         } else {
-                            currentDialogueText = zote.precepts[com.badlogic.gdx.math.MathUtils.random(0, zote.precepts.length - 1)];
+                            currentDialogueText = t(zote.precepts[com.badlogic.gdx.math.MathUtils.random(0, zote.precepts.length - 1)]);
                         }
                     }
                 }
@@ -458,7 +459,7 @@ public class GameScreen extends AbstractScreen {
                                 isDialogueActive = false;
                                 zote.state = Zote.State.IDLE;
                             } else {
-                                currentDialogueText = zote.mainDialogues[zote.mainDialogueIndex];
+                                currentDialogueText = t(zote.mainDialogues[zote.mainDialogueIndex]);
                                 dialogueTypewriterTimer = 0f;
                                 GameAssetManager.playRandomZoteSound();
                             }
@@ -1174,7 +1175,7 @@ public class GameScreen extends AbstractScreen {
 
             font.getData().setScale(3.5f);
             font.setColor(Color.LIGHT_GRAY);
-            font.draw(batch, "Zote The Mighty:", camera.position.x - 560, camera.position.y - 140);
+            font.draw(batch, t("zote.name"), camera.position.x - 560, camera.position.y - 140);
 
             // Scale up the Body font
             font.getData().setScale(3f);
@@ -1193,7 +1194,7 @@ public class GameScreen extends AbstractScreen {
         } else if (nearZote) {
             font.getData().setScale(1.4f);
             font.setColor(Color.GOLD);
-            font.draw(batch, "Press UP to Listen", zote.getBounds().x - 40, zote.getBounds().y + zote.getBounds().height + 80);
+            font.draw(batch, t("zote.listen"), zote.getBounds().x - 40, zote.getBounds().y + zote.getBounds().height + 80);
             font.setColor(Color.WHITE);
             font.getData().setScale(1.0f);
         }

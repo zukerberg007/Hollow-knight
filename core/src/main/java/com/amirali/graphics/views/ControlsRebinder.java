@@ -15,6 +15,8 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import java.util.EnumMap;
 import java.util.Map;
 
+import static com.amirali.graphics.LanguageManager.t;
+
 /**
  * Builds a self-contained controls panel: one "Action: [key]" row per rebindable action plus a
  * "Reset Controls" button. Click a key button, then press any key to rebind it (Esc cancels).
@@ -41,7 +43,7 @@ public class ControlsRebinder {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
                     final InputProcessor previous = Gdx.input.getInputProcessor();
-                    keyBtn.setText("Press a key...");
+                    keyBtn.setText(t("controls.pressKey"));
 
                     Gdx.input.setInputProcessor(new InputAdapter() {
                         @Override
@@ -65,7 +67,7 @@ public class ControlsRebinder {
             panel.add(row).row();
         }
 
-        TextButton resetBtn = new TextButton("Reset Controls", skin);
+        TextButton resetBtn = new TextButton(t("controls.reset"), skin);
         resetBtn.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {

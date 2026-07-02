@@ -10,18 +10,20 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
+import static com.amirali.graphics.LanguageManager.t;
+
 public class PauseModal extends Modal {
 
     public PauseModal() {
         super();
 
-        Label title = new Label("PAUSED", skin);
+        Label title = new Label(t("pause.title"), skin);
         title.setFontScale(1.5f);
 
-        TextButton resumeButton = new TextButton("Continue", skin);
-        TextButton cheatsButton = new TextButton("Cheat Codes", skin);
-        TextButton settingsButton = new TextButton("Settings", skin);
-        TextButton exitButton = new TextButton("Save & Exit", skin);
+        TextButton resumeButton = new TextButton(t("pause.continue"), skin);
+        TextButton cheatsButton = new TextButton(t("pause.cheatCodes"), skin);
+        TextButton settingsButton = new TextButton(t("menu.settings"), skin);
+        TextButton exitButton = new TextButton(t("pause.saveExit"), skin);
 
         defaults().space(10);
 
@@ -67,7 +69,7 @@ public class PauseModal extends Modal {
     public void onCheats() {
         if (uiManager.getScreen() instanceof AbstractScreen) {
             AbstractScreen screen = (AbstractScreen) uiManager.getScreen();
-            screen.openToast("CHEATS:\nCtrl+K: Insta-kill\nCtrl+G: God Mode\nCtrl+N: Noclip\nCtrl+B: Boss TP\nCtrl+M: Max Soul");
+            screen.openToast(t("pause.cheatsToast"));
         }
     }
 

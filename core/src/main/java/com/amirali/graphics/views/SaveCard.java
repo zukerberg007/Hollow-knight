@@ -14,6 +14,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 
+import static com.amirali.graphics.LanguageManager.t;
+
 public class SaveCard extends Table {
 
     public SaveCard(final int slotIndex, GameData data) {
@@ -26,7 +28,7 @@ public class SaveCard extends Table {
 
         // If data is null, the save file doesn't exist yet!
         if (data == null) {
-            Label newGameLabel = new Label("NEW GAME", skin, "subtitle");
+            Label newGameLabel = new Label(t("save.newGame"), skin, "subtitle");
             add(newGameLabel).expandX().left();
         } else {
             // Apply the location background image
@@ -49,9 +51,9 @@ public class SaveCard extends Table {
             add(statsTable).expandX().left();
 
             Table detailsTable = new Table();
-            Label locationLabel = new Label("FORGOTTEN CROSSROADS", skin, "subtitle");
+            Label locationLabel = new Label(t("save.location"), skin, "subtitle");
             Label progressLabel = new Label(data.progress + "%", skin);
-            Label timeLabel = new Label("REAL SAVE", skin);
+            Label timeLabel = new Label(t("save.realSave"), skin);
 
             progressLabel.setColor(Color.LIGHT_GRAY);
             timeLabel.setColor(Color.LIGHT_GRAY);
@@ -62,7 +64,7 @@ public class SaveCard extends Table {
 
             add(detailsTable).right().padRight(30);
 
-            TextButton clearBtn = new TextButton("CLEAR SAVE", skin);
+            TextButton clearBtn = new TextButton(t("save.clear"), skin);
             clearBtn.addListener(new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
@@ -74,7 +76,7 @@ public class SaveCard extends Table {
                     setBackground((TextureRegionDrawable) null);
                     Label numLabel = new Label(slotIndex + ". ", skin, "title");
                     add(numLabel).padRight(20).left();
-                    Label newGameLabel = new Label("NEW GAME", skin, "subtitle");
+                    Label newGameLabel = new Label(t("save.newGame"), skin, "subtitle");
                     add(newGameLabel).expandX().left();
                 }
             });

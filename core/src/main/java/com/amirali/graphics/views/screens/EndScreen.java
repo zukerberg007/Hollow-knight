@@ -10,6 +10,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
+import static com.amirali.graphics.LanguageManager.t;
+
 public class EndScreen extends AbstractScreen {
 
     private final GameData finalData;
@@ -38,7 +40,7 @@ public class EndScreen extends AbstractScreen {
         mainTable.setFillParent(true);
         mainTable.center();
 
-        Label title = new Label("VICTORY", skin, "title");
+        Label title = new Label(t("end.title"), skin, "title");
         title.setColor(Color.GOLD);
         mainTable.add(title).padBottom(40).row();
 
@@ -47,16 +49,16 @@ public class EndScreen extends AbstractScreen {
         int seconds = (int) (finalData.playTime % 60);
         String timeString = String.format("%02d:%02d", minutes, seconds);
 
-        Label timeLabel = new Label("Total Playtime: " + timeString, skin, "subtitle");
-        Label deathsLabel = new Label("Total Deaths: " + finalData.deaths, skin, "subtitle");
-        Label killsLabel = new Label("Enemies Defeated: " + finalData.killedEnemiesCount, skin, "subtitle");
+        Label timeLabel = new Label(t("end.playtime", timeString), skin, "subtitle");
+        Label deathsLabel = new Label(t("end.deaths", finalData.deaths), skin, "subtitle");
+        Label killsLabel = new Label(t("end.kills", finalData.killedEnemiesCount), skin, "subtitle");
 
         mainTable.add(timeLabel).padBottom(15).row();
         mainTable.add(deathsLabel).padBottom(15).row();
         mainTable.add(killsLabel).padBottom(50).row();
 
         // 3. Navigation Buttons
-        Table restartBtn = createHoverButton("Restart Game", new ClickListener() {
+        Table restartBtn = createHoverButton(t("end.restart"), new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 if (GameAssetManager.winMusic != null) GameAssetManager.winMusic.stop();
@@ -68,7 +70,7 @@ public class EndScreen extends AbstractScreen {
             }
         });
 
-        Table menuBtn = createHoverButton("Main Menu", new ClickListener() {
+        Table menuBtn = createHoverButton(t("end.menu"), new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 if (GameAssetManager.winMusic != null) GameAssetManager.winMusic.stop();

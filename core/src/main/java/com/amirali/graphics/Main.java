@@ -9,6 +9,7 @@ public class Main extends Game {
     @Override
     public void create() {
         GameAssetManager.init();
+        LanguageManager.init();
         KeyBindings.load();
         BrightnessManager.init();
         BackgroundManager.init();

@@ -11,6 +11,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
+import static com.amirali.graphics.LanguageManager.t;
+
 public class StartMenuScreen extends AbstractScreen {
     @Override
     public void show() {
@@ -20,7 +22,7 @@ public class StartMenuScreen extends AbstractScreen {
         mainTable.setFillParent(true);
         mainTable.top();
 
-        Label title = new Label("SELECT PROFILE", skin, "title");
+        Label title = new Label(t("start.title"), skin, "title");
         mainTable.add(title).padTop(50).padBottom(30).row();
 
         Table saveList = new Table();
@@ -58,7 +60,7 @@ public class StartMenuScreen extends AbstractScreen {
 
         mainTable.add(scrollPane).expand().fill().padLeft(40).padRight(40).padBottom(20).row();
 
-        Table backBtn = createHoverButton("BACK", new ClickListener(){
+        Table backBtn = createHoverButton(t("start.back"), new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 uiManager.setScreen(new MainMenuScreen());

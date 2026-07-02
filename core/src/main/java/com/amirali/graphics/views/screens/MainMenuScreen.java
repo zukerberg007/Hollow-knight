@@ -8,9 +8,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Scaling;
 
-public class MainMenuScreen extends AbstractScreen {
+import static com.amirali.graphics.LanguageManager.t;
 
-    private boolean english = true;
+public class MainMenuScreen extends AbstractScreen {
 
     @Override
     public void show() {
@@ -28,31 +28,31 @@ public class MainMenuScreen extends AbstractScreen {
         Table menu = new Table();
         menu.defaults().spaceBottom(4).center();
 
-        Table startBtn = createHoverButton("Start Game", new ClickListener() {
+        Table startBtn = createHoverButton(t("menu.start"), new ClickListener() {
             @Override public void clicked(InputEvent e, float x, float y) {
                 uiManager.setScreen(new StartMenuScreen());
             }
         });
 
-        Table settingsBtn = createHoverButton("Settings", new ClickListener() {
+        Table settingsBtn = createHoverButton(t("menu.settings"), new ClickListener() {
             @Override public void clicked(InputEvent e, float x, float y) {
                 uiManager.setScreen(new SettingsMenuScreen());
             }
         });
 
-        Table achievementsBtn = createHoverButton("Achievements", new ClickListener() {
+        Table achievementsBtn = createHoverButton(t("menu.achievements"), new ClickListener() {
             @Override public void clicked(InputEvent e, float x, float y) {
                 uiManager.setScreen(new AchievementsMenuScreen());
             }
         });
 
-        Table guideBtn = createHoverButton("Guide", new ClickListener() {
+        Table guideBtn = createHoverButton(t("menu.guide"), new ClickListener() {
             @Override public void clicked(InputEvent e, float x, float y) {
                 uiManager.setScreen(new GuideMenuScreen());
             }
         });
 
-        Table quitBtn = createHoverButton("Quit Game", new ClickListener() {
+        Table quitBtn = createHoverButton(t("menu.quit"), new ClickListener() {
             @Override public void clicked(InputEvent e, float x, float y) {
                 Gdx.app.exit();
             }

@@ -83,15 +83,6 @@ public class KeyBindings {
     }
 
     public static String displayName(Action a) {
-        switch (a) {
-            case MOVE_LEFT:  return "Move Left";
-            case MOVE_RIGHT: return "Move Right";
-            case JUMP:       return "Jump";
-            case ATTACK:     return "Attack";
-            case DASH:       return "Dash";
-            case FOCUS:      return "Focus";
-            case INVENTORY:  return "Inventory";
-            default:         return a.name();
-        }
+        return LanguageManager.t("action." + a.name().toLowerCase());
     }
 }

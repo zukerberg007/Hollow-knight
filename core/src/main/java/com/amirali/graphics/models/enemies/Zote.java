@@ -27,17 +27,19 @@ public class Zote extends Entity {
     public int mainDialogueIndex = 0;
     public boolean hasFinishedMainDialogue = false;
 
+    // Localization keys; resolve with LanguageManager.t() at display time so the
+    // dialogue follows the currently selected language.
     public final String[] mainDialogues = {
-        "Curse this wretched kingdom! And curse you for interrupting me!",
-        "I am Zote the Mighty, a knight of great renown.",
-        "Do not stand in my way, or you shall taste my nail, 'Life Ender'!"
+        "zote.main.0",
+        "zote.main.1",
+        "zote.main.2"
     };
 
     public final String[] precepts = {
-        "Precept One: 'Always Win Your Battles'. Losing teaches you nothing.",
-        "Precept Two: 'Never Let Them Laugh at You'. Fools laugh at everything.",
-        "Precept Three: 'Always Be Rested'. Taking a moment to rest is essential.",
-        "Precept Four: 'Forget Your Past'. The past is painful, and thinking about it can only bring you misery."
+        "zote.precept.0",
+        "zote.precept.1",
+        "zote.precept.2",
+        "zote.precept.3"
     };
 
     public Zote(float x, float y) {

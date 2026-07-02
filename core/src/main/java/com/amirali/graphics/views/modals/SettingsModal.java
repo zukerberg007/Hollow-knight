@@ -1,7 +1,11 @@
 package com.amirali.graphics.views.modals;
 
 import com.amirali.graphics.BrightnessManager;
+import com.amirali.graphics.LanguageManager;
+import com.amirali.graphics.uiManager;
 import com.amirali.graphics.views.ControlsRebinder;
+
+import static com.amirali.graphics.LanguageManager.t;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -25,11 +29,9 @@ public class SettingsModal extends Modal {
     public SettingsModal() {
         super();
 
-        final Preferences prefs = Gdx.app.getPreferences("HollowKnightSettings");
-
         defaults().space(12).pad(6);
 
-        Label title = new Label("SETTINGS", skin);
+        Label title = new Label(t("settings.title"), skin);
         title.setFontScale(1.4f);
         add(title).padBottom(15).row();
 
@@ -37,7 +39,7 @@ public class SettingsModal extends Modal {
         content.defaults().space(10).center();
 
         // --- VIDEO / BRIGHTNESS ---
-        content.add(new Label("VIDEO", skin, "subtitle")).padTop(5).row();
+        content.add(new Label(t("settings.video"), skin, "subtitle")).padTop(5).row();
         Table brightTable = new Table();
         final Slider brightSlider = new Slider(0.1f, 1f, 0.1f, false, skin);
         brightSlider.setValue(BrightnessManager.get());
@@ -47,25 +49,26 @@ public class SettingsModal extends Modal {
                 BrightnessManager.set(brightSlider.getValue());
             }
         });
-        brightTable.add(new Label("Brightness: ", skin)).padRight(10);
+        brightTable.add(new Label(t("settings.brightness"), skin)).padRight(10);
         brightTable.add(brightSlider).width(150);
         content.add(brightTable).row();
 
         // --- CONTROLS ---
-        content.add(new Label("CONTROLS", skin, "subtitle")).padTop(15).row();
+        content.add(new Label(t("settings.controls"), skin, "subtitle")).padTop(15).row();
         content.add(ControlsRebinder.buildControls(skin)).row();
 
         // --- LANGUAGE ---
-        content.add(new Label("LANGUAGE", skin, "subtitle")).padTop(15).row();
-        final boolean[] english = { prefs.getBoolean("english", true) };
-        final TextButton languageBtn = new TextButton("Language: " + (english[0] ? "EN" : "FA"), skin);
+        content.add(new Label(t("settings.language"), skin, "subtitle")).padTop(15).row();
+        final TextButton languageBtn = new TextButton(t("settings.languageBtn") + ": " + LanguageManager.current().name(), skin);
         languageBtn.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent e, float x, float y) {
-                english[0] = !english[0];
-                prefs.putBoolean("english", english[0]);
-                prefs.flush();
-                languageBtn.setText("Language: " + (english[0] ? "EN" : "FA"));
+                LanguageManager.toggle();
+                // Rebuild the whole modal stack (pause menu + this settings overlay)
+                // so both are retranslated instantly. The game stays paused underneath.
+                uiManager.getScreen().getModalStack().clearChildren();
+                new PauseModal().show();
+                new SettingsModal().show();
             }
         });
         content.add(languageBtn).width(200).row();
@@ -76,7 +79,7 @@ public class SettingsModal extends Modal {
         scroll.setVariableSizeKnobs(false);
         add(scroll).width(520).height(420).row();
 
-        TextButton backBtn = new TextButton("Back", skin);
+        TextButton backBtn = new TextButton(t("common.back"), skin);
         backBtn.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent e, float x, float y) {
