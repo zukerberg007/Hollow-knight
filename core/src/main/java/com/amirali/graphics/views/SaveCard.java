@@ -1,9 +1,11 @@
 package com.amirali.graphics.views;
 
+import com.amirali.graphics.AreaMusicManager;
 import com.amirali.graphics.GameAssetManager;
 import com.amirali.graphics.SaveManager;
 import com.amirali.graphics.models.GameData;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
@@ -30,8 +32,24 @@ public class SaveCard extends Table {
             Label newGameLabel = new Label(t("save.newGame"), skin, "subtitle");
             add(newGameLabel).expandX().left();
         } else {
-            if (GameAssetManager.forgottenCrossroadsBg != null) {
-                setBackground(new TextureRegionDrawable(new TextureRegion(GameAssetManager.forgottenCrossroadsBg)));
+            Texture areaBg;
+            String locationKey;
+            switch (AreaMusicManager.areaAt(data.playerX)) {
+                case GREEN_PATH -> {
+                    areaBg = GameAssetManager.greenPathBg;
+                    locationKey = "save.location.greenpath";
+                }
+                case CRYSTAL_PEAK -> {
+                    areaBg = GameAssetManager.crystalPeakBg;
+                    locationKey = "save.location.crystalpeak";
+                }
+                default -> {
+                    areaBg = GameAssetManager.forgottenCrossroadsBg;
+                    locationKey = "save.location";
+                }
+            }
+            if (areaBg != null) {
+                setBackground(new TextureRegionDrawable(new TextureRegion(areaBg)));
             } else {
                 setBackground(skin.getDrawable("window"));
             }
@@ -48,7 +66,7 @@ public class SaveCard extends Table {
             add(statsTable).expandX().left();
 
             Table detailsTable = new Table();
-            Label locationLabel = new Label(t("save.location"), skin, "subtitle");
+            Label locationLabel = new Label(t(locationKey), skin, "subtitle");
             Label progressLabel = new Label(data.progress + "%", skin);
             Label timeLabel = new Label(t("save.realSave"), skin);
 

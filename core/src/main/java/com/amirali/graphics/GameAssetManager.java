@@ -37,6 +37,8 @@ public class GameAssetManager {
     public static Texture soulOrbEmpty;
     public static Texture FULL_ORB;
     public static Texture forgottenCrossroadsBg;
+    public static Texture greenPathBg;
+    public static Texture crystalPeakBg;
 
     public static com.badlogic.gdx.audio.Sound slashSound;
     public static com.badlogic.gdx.audio.Sound jumpSound;
@@ -187,6 +189,16 @@ public class GameAssetManager {
         } catch (Exception e) {
             Gdx.app.error("Texture", "Missing Area_Forgotten Crossroads.png! Using fallback.");
         }
+        try {
+            greenPathBg = new Texture(Gdx.files.internal("Area save art/Area_Green_Path.png"));
+        } catch (Exception e) {
+            Gdx.app.error("Texture", "Missing Area_Green_Path.png! Using fallback.");
+        }
+        try {
+            crystalPeakBg = new Texture(Gdx.files.internal("Area save art/Area_Crystal_Mines.png"));
+        } catch (Exception e) {
+            Gdx.app.error("Texture", "Missing Area_Crystal_Mines.png! Using fallback.");
+        }
 
         Window.WindowStyle style = skin.get(Window.WindowStyle.class);
         style.background = null;
@@ -203,6 +215,8 @@ public class GameAssetManager {
         if (winMusic != null) winMusic.dispose();
         if (hoverPointer != null) hoverPointer.dispose();
         if (forgottenCrossroadsBg != null) forgottenCrossroadsBg.dispose();
+        if (greenPathBg != null) greenPathBg.dispose();
+        if (crystalPeakBg != null) crystalPeakBg.dispose();
         if (wallBreakSound != null) wallBreakSound.dispose();
         if (zoteTalkSounds != null) {
             for (com.badlogic.gdx.audio.Sound sound : zoteTalkSounds) {
