@@ -17,11 +17,11 @@ scalingCount: 1
 scaling0: 1.0
 timelineCount: 1
 timeline0: 0.0
-- Life - 
+- Life -
 lowMin: 0.0
 lowMax: 0.0
-highMin: 400.0
-highMax: 600.0
+highMin: 500.0
+highMax: 800.0
 relative: false
 scalingCount: 1
 scaling0: 1.0
@@ -67,23 +67,23 @@ timelineCount: 1
 timeline0: 0.0
 - Y Scale - 
 active: false
-- Velocity - 
+- Velocity -
 active: true
 lowMin: 0.0
 lowMax: 0.0
-highMin: 50.0
-highMax: 150.0
+highMin: 100.0
+highMax: 350.0
 relative: false
 scalingCount: 1
 scaling0: 1.0
 timelineCount: 1
 timeline0: 0.0
-- Angle - 
+- Angle -
 active: true
 lowMin: 0.0
 lowMax: 0.0
-highMin: 0.0
-highMax: 360.0
+highMin: -20.0
+highMax: 200.0
 relative: false
 scalingCount: 1
 scaling0: 1.0
@@ -102,12 +102,12 @@ timelineCount: 1
 timeline0: 0.0
 - Wind - 
 active: false
-- Gravity - 
+- Gravity -
 active: true
 lowMin: 0.0
 lowMax: 0.0
-highMin: 200.0
-highMax: 300.0
+highMin: -260.0
+highMax: -180.0
 relative: false
 scalingCount: 1
 scaling0: 1.0
