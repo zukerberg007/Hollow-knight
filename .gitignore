@@ -147,6 +147,7 @@ nb-configuration.xml
 ## OS-Specific:
 .DS_Store
 Thumbs.db
+desktop.ini
 
 ## Downloaded split archive; its contents are extracted into assets/audio/Audio_Files/:
 /assets/audio/Audio_Files.z*
