@@ -44,9 +44,7 @@ public class CrystalGuardian extends Entity {
     private final float defaultHeight;
     private final float maxHealth;
     private final float respawnX, respawnY;
-    private boolean playerHasLeft = false;
-    private static final float RESPAWN_FAR_DIST = 1500f;
-    private static final float RESPAWN_NEAR_DIST = 1200f;
+    private static final float RESPAWN_FAR_DIST = 3000f;
     private Player player;
 
     private float drawOffsetX = 0f;
@@ -323,14 +321,8 @@ public class CrystalGuardian extends Entity {
         float dx = player.position.x - bounds.x;
         float dy = player.position.y - bounds.y;
         float dist = (float) Math.sqrt(dx * dx + dy * dy);
-        if (dist > RESPAWN_FAR_DIST) {
-            playerHasLeft = true;
-        } else if (playerHasLeft && dist < RESPAWN_NEAR_DIST) {
-            if (!alive) {
-                respawn();
-            } else {
-                playerHasLeft = false;
-            }
+        if (!alive && dist > RESPAWN_FAR_DIST) {
+            respawn();
         }
     }
 
@@ -348,7 +340,6 @@ public class CrystalGuardian extends Entity {
         laserHitConsumed = false;
         knockbackTimer = 0f;
         hitFlash = 0f;
-        playerHasLeft = false;
     }
 
     @Override

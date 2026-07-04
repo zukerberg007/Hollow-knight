@@ -50,9 +50,7 @@ public class Mosquito extends Entity {
     private float hitFlash = 0f;
     private final float maxHealth;
     private final float respawnX, respawnY;
-    private boolean playerHasLeft = false;
-    private static final float RESPAWN_FAR_DIST = 1500f;
-    private static final float RESPAWN_NEAR_DIST = 1200f;
+    private static final float RESPAWN_FAR_DIST = 3000f;
 
     private float drawOffsetX = 0f;
     private float drawOffsetY = 0f;
@@ -239,14 +237,8 @@ public class Mosquito extends Entity {
         float dx = player.position.x - bounds.x;
         float dy = player.position.y - bounds.y;
         float dist = (float) Math.sqrt(dx * dx + dy * dy);
-        if (dist > RESPAWN_FAR_DIST) {
-            playerHasLeft = true;
-        } else if (playerHasLeft && dist < RESPAWN_NEAR_DIST) {
-            if (!alive) {
-                respawn();
-            } else {
-                playerHasLeft = false;
-            }
+        if (!alive && dist > RESPAWN_FAR_DIST) {
+            respawn();
         }
     }
 
@@ -264,7 +256,6 @@ public class Mosquito extends Entity {
         attackCooldownTimer = 0f;
         knockbackTimer = 0f;
         hitFlash = 0f;
-        playerHasLeft = false;
     }
 
     @Override
