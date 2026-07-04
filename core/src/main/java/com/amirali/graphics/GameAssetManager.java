@@ -50,6 +50,7 @@ public class GameAssetManager {
     public static com.badlogic.gdx.audio.Sound fireballSound;
     public static com.badlogic.gdx.audio.Sound howlingWraithsSound;
     public static com.badlogic.gdx.audio.Sound landingSound;
+    public static com.badlogic.gdx.audio.Sound runSound;
     public static com.badlogic.gdx.audio.Sound wallSlideSound;
     public static com.badlogic.gdx.audio.Sound wingsSound;
     public static com.badlogic.gdx.audio.Sound gainSoulSound;
@@ -81,6 +82,7 @@ public class GameAssetManager {
         fireballSound = Gdx.audio.newSound(Gdx.files.internal("sfx/hero_fireball.wav"));
         howlingWraithsSound = Gdx.audio.newSound(Gdx.files.internal("sfx/hero_scream_spell.wav"));
         landingSound = Gdx.audio.newSound(Gdx.files.internal("sfx/hero_land_soft.wav"));
+        runSound = Gdx.audio.newSound(Gdx.files.internal("sfx/hero_run_footsteps_stone.wav"));
         wallSlideSound = Gdx.audio.newSound(Gdx.files.internal("sfx/hero_wall_slide.wav"));
         wingsSound = Gdx.audio.newSound(Gdx.files.internal("sfx/hero_wings.wav"));
         gainSoulSound = Gdx.audio.newSound(Gdx.files.internal("sfx/soulGain.wav"));
@@ -235,6 +237,7 @@ public class GameAssetManager {
         if (fireballSound != null) fireballSound.dispose();
         if (howlingWraithsSound != null) howlingWraithsSound.dispose();
         if (landingSound != null) landingSound.dispose();
+        if (runSound != null) runSound.dispose();
         if (wallSlideSound != null) wallSlideSound.dispose();
         if (wingsSound != null) wingsSound.dispose();
         if (gainSoulSound != null) gainSoulSound.dispose();

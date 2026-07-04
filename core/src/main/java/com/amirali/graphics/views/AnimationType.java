@@ -32,6 +32,8 @@ public enum AnimationType {
     HOLLOW_KNIGHT_VENGEFUL_SPIRIT("animations/Fireball Cast.png", 9, 1, 9),
     HOLLOW_KNIGHT_VENGEFUL_SPIRIT_BLAST("animations/Effects/BlastSoul.png", 5, 1, 5),
     HOLLOW_KNIGHT_VENGEFUL_SPIRIT_PROJECTILE("animations/Projectile/SoulBall.png", 4, 1, 4),
+    HOLLOW_KNIGHT_SHADOW_BALL("animations/Projectile/ShadowBall.png", 6, 1, 6),
+    HOLLOW_KNIGHT_SHADOW_SCREAM("animations/Effects/ShadowScream.png", 14, 1, 14),
     MOSSCREEP_WALK_FRAMES("animations/Mosscreep/Walk.png", 3, 1, 3),
     MOSSCREEP_TURN_FRAMES("animations/Mosscreep/Turn.png", 3, 1, 3),
     MOSSCREEP_DEATH_AIR_FRAMES("animations/Mosscreep/Death Air.png", 4, 1, 4),

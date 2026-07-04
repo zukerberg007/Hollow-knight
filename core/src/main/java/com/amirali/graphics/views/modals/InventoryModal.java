@@ -79,6 +79,13 @@ public class InventoryModal extends Modal {
                 String description = getCharmDescription(charmId);
                 boolean currentlyEquipped = checkCharmStatus(charmId);
 
+                if (charmId == 8) {
+                    String note = player.hasVoidHeart ? t("inv.voidheart.permanent") : t("inv.voidheart.locked");
+                    descLabel.setText(t("charm.8").toUpperCase() + ":\n" + note + "\n\n" + description);
+                    updateNotchText();
+                    return;
+                }
+
                 if (currentlyEquipped) {
                     setCharmStatus(charmId, false);
                     player.currentNotchesUsed--;

@@ -11,7 +11,8 @@ public class AreaMusicManager {
     public enum Area {
         GREEN_PATH("audio/Audio_Files/Audio_Files/S5 Green Path Main.wav"),
         FORGOTTEN_CROSSROADS("S19 Crossroads Main.wav"),
-        CRYSTAL_PEAK("audio/Audio_Files/Audio_Files/S26 Crystal MAIN.wav");
+        CRYSTAL_PEAK("audio/Audio_Files/Audio_Files/S26 Crystal MAIN.wav"),
+        BOSS_FIGHT("Hollow Knight OST - False Knight.mp3");
 
         public final String file;
 
@@ -20,8 +21,8 @@ public class AreaMusicManager {
         }
     }
 
-    private static final float GREEN_PATH_MAX_X = 5900f;
-    private static final float CRYSTAL_PEAK_MIN_X = 20800f;
+    private static final float GREEN_PATH_MAX_X = 8300f;
+    private static final float CRYSTAL_PEAK_MIN_X = 23200f;
 
     private static final float FADE_DURATION = 1.5f;
 
@@ -40,7 +41,11 @@ public class AreaMusicManager {
     }
 
     public void update(float playerX, float delta) {
-        Area area = areaAt(playerX);
+        update(playerX, delta, false);
+    }
+
+    public void update(float playerX, float delta, boolean bossMusic) {
+        Area area = bossMusic ? Area.BOSS_FIGHT : areaAt(playerX);
         if (area != currentArea) {
             switchTo(area);
         }

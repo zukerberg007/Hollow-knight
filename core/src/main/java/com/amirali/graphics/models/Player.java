@@ -121,6 +121,7 @@ public class Player extends Entity{
     private Vector2 respawnPosition = new Vector2(0, GROUND_Y);
     private float damageFlashTimer = 0f;
     private static final float DAMAGE_FLASH_INTERVAL = 0.08f;
+    private boolean runSoundPlaying = false;
     public boolean isDying = false;
     private float deathTimer = 0f;
     private static final float DEATH_ANIM_DURATION = 1.8f;
@@ -147,7 +148,7 @@ public class Player extends Entity{
     public Vector2 spiritPosition = new Vector2();
     public Vector2 spiritVelocity = new Vector2();
     public static final float BLAST_DURATION = 0.3f;
-    private static final float SPIRIT_SPEED = 900f;
+    private static final float SPIRIT_SPEED = 1300f;
     private Array<Entity> hitEnemies = new Array<>();
     private static final float PROJECTILE_WIDTH = 60f;
     private static final float PROJECTILE_HEIGHT = 60f;
@@ -189,6 +190,15 @@ public class Player extends Entity{
     public void update(float delta, Array<SolidBlock> blocks) {
         super.update(delta, blocks);
         if (damageFlashTimer > 0f) damageFlashTimer -= delta;
+
+        boolean runningNow = currentAnimation == AnimationType.HOLLOW_KNIGHT_RUN && !isDying && !isNoclip;
+        if (runningNow && !runSoundPlaying) {
+            loopSound(GameAssetManager.runSound, 0.6f);
+            runSoundPlaying = true;
+        } else if (!runningNow && runSoundPlaying) {
+            stopRunSound();
+        }
+
         AnimationType previousAnimation = currentAnimation;
 
         if (isNoclip) {
@@ -1045,5 +1055,10 @@ public class Player extends Entity{
         if (sound != null && Gdx.app.getPreferences("HollowKnightSettings").getBoolean("sfxOn", true)) {
             sound.loop(volume);
         }
+    }
+
+    public void stopRunSound() {
+        if (GameAssetManager.runSound != null) GameAssetManager.runSound.stop();
+        runSoundPlaying = false;
     }
 }

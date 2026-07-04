@@ -169,6 +169,9 @@ public class GameScreen extends AbstractScreen {
             game.player.hasSharpShadow = loadedData.hasSharpShadow;
             game.player.hasUnbreakableStrength = loadedData.hasUnbreakableStrength;
             game.player.hasQuickSlash = loadedData.hasQuickSlash;
+            game.player.currentNotchesUsed = (loadedData.hasSharpShadow ? 1 : 0)
+                + (loadedData.hasUnbreakableStrength ? 1 : 0)
+                + (loadedData.hasQuickSlash ? 1 : 0);
             game.player.syncBounds();
             game.player.setRespawnPosition(new Vector2(loadedData.playerX, loadedData.heightY));
         } else {
@@ -356,7 +359,13 @@ public class GameScreen extends AbstractScreen {
         ScreenUtils.clear(0.5f, 0.5f, 0.5f, 1f);
         boolean isPaused = getModalStack().getChildren().size > 0;
 
-        if (areaMusic != null) areaMusic.update(game.player.position.x, delta);
+        if (isPaused) game.player.stopRunSound();
+
+        if (areaMusic != null) {
+            boolean bossMusic = bossArena != null && falseKnight != null && falseKnight.isAlive()
+                && game.player.getBounds().overlaps(bossArena);
+            areaMusic.update(game.player.position.x, delta, bossMusic);
+        }
 
         if (!isPaused) {
             loadedData.playTime += delta;
@@ -1052,7 +1061,9 @@ public class GameScreen extends AbstractScreen {
         }
 
         if (game.player.isHowlingWraithsActive) {
-            Animation<TextureRegion> hwEffect = GameAssetManager.animationMap.get(AnimationType.HOLLOW_KNIGHT_HOWLING_WRAITHS_EFFECT);
+            Animation<TextureRegion> hwEffect = GameAssetManager.animationMap.get(
+                game.player.hasVoidHeart ? AnimationType.HOLLOW_KNIGHT_SHADOW_SCREAM
+                    : AnimationType.HOLLOW_KNIGHT_HOWLING_WRAITHS_EFFECT);
             float effectTime = game.player.getHowlingWraithsTimer();
             TextureRegion frame = hwEffect.getKeyFrame(effectTime, false);
 
@@ -1094,7 +1105,9 @@ public class GameScreen extends AbstractScreen {
                 }
             }
 
-            Animation<TextureRegion> projAnim = GameAssetManager.animationMap.get(AnimationType.HOLLOW_KNIGHT_VENGEFUL_SPIRIT_PROJECTILE);
+            Animation<TextureRegion> projAnim = GameAssetManager.animationMap.get(
+                game.player.hasVoidHeart ? AnimationType.HOLLOW_KNIGHT_SHADOW_BALL
+                    : AnimationType.HOLLOW_KNIGHT_VENGEFUL_SPIRIT_PROJECTILE);
             TextureRegion frame = projAnim.getKeyFrame(projTimer, true);
             if (frame != null) {
                 float fw = frame.getRegionWidth() * scale;
@@ -1259,6 +1272,7 @@ public class GameScreen extends AbstractScreen {
     @Override
     public void hide() {
         super.hide();
+        game.player.stopRunSound();
         if (hud != null) hud.dispose();
         if (rockParticles != null) rockParticles.dispose();
         if (areaMusic != null) {
@@ -1291,10 +1305,9 @@ public class GameScreen extends AbstractScreen {
 
     private void clampCameraToMap() {
         float halfW = camera.viewportWidth / 2f, halfH = camera.viewportHeight / 2f;
-        float minX = halfW, maxX = mapPixelWidth - halfW;
+        float maxX = mapPixelWidth - halfW;
         float minY = halfH, maxY = mapPixelHeight - halfH;
-        camera.position.x = (minX <= maxX) ? MathUtils.clamp(camera.position.x, minX, maxX)
-            : mapPixelWidth / 2f;
+        camera.position.x = Math.min(camera.position.x, maxX);
         camera.position.y = (minY <= maxY) ? MathUtils.clamp(camera.position.y, minY, maxY)
             : mapPixelHeight / 2f;
     }
