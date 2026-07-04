@@ -21,8 +21,8 @@ public class AreaMusicManager {
         }
     }
 
-    private static final float GREEN_PATH_MAX_X = 8300f;
-    private static final float CRYSTAL_PEAK_MIN_X = 23200f;
+    private static final float GREEN_PATH_MAX_X = 12000f;
+    private static final float CRYSTAL_PEAK_MIN_X = 27200f;
 
     private static final float FADE_DURATION = 1.5f;
 
