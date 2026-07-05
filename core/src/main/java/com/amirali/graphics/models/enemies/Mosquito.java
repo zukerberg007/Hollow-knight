@@ -197,15 +197,18 @@ public class Mosquito extends Entity {
         float dy = targetPosition.y - bounds.y;
         float dist = (float) Math.sqrt(dx * dx + dy * dy);
 
-        if (dist < 2f) {
+        float step = chargeSpeed * delta;
+        if (dist <= step) {
+            bounds.x = targetPosition.x;
+            bounds.y = targetPosition.y;
             state = State.IDLE;
             stateTimer = 0f;
             attackCooldownTimer = attackCooldown;
             return;
         }
 
-        float moveX = dx / dist * chargeSpeed * delta;
-        float moveY = dy / dist * chargeSpeed * delta;
+        float moveX = dx / dist * step;
+        float moveY = dy / dist * step;
         bounds.x += moveX;
         bounds.y += moveY;
 
@@ -282,7 +285,7 @@ public class Mosquito extends Entity {
                 break;
             case ANTICIPATE:
                 anim = GameAssetManager.animationMap.get(AnimationType.MOSQUITO_ANTICIPATE);
-                animTime = stateTimer;
+                animTime = (stateTimer / ANTICIPATE_DURATION) * anim.getAnimationDuration();
                 loop = false;
                 break;
             case CHARGE:
