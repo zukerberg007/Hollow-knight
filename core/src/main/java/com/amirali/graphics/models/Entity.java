@@ -19,6 +19,7 @@ public abstract class Entity {
 
     public Rectangle getBounds() { return bounds; }
     public boolean isAlive() { return alive; }
+    public boolean isHarmful() { return alive && health > 0f; }
 
     protected float invincibleTime() { return INVINCIBLE_TIME; }
 

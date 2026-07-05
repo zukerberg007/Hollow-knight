@@ -23,7 +23,6 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
@@ -45,7 +44,6 @@ public class GameScreen extends AbstractScreen {
     private ScreenViewport viewport;
     private float mapPixelWidth, mapPixelHeight;
     private static final float CAMERA_LERP = 8f;
-    private ShapeRenderer shapeRenderer;
 
     private int[] backgroundLayers;
     private int[] foregroundLayers;
@@ -64,6 +62,19 @@ public class GameScreen extends AbstractScreen {
     public void saveCurrentGame() {
         com.amirali.graphics.SaveManager.saveGame(loadedData, game.player, zote);
         openToast(t("toast.saved"));
+    }
+
+    private void trackKill(Entity enemy, String typeTag) {
+        if (!enemy.isAlive()) {
+            if (countedKills.add(enemy)) {
+                loadedData.killedEnemiesCount++;
+                if (!loadedData.killedEnemyTypes.contains(typeTag)) {
+                    loadedData.killedEnemyTypes = loadedData.killedEnemyTypes + typeTag + ",";
+                }
+            }
+        } else {
+            countedKills.remove(enemy);
+        }
     }
 
     private OrthogonalTiledMapRenderer renderer;
@@ -97,9 +108,16 @@ public class GameScreen extends AbstractScreen {
 
     private Rectangle voidHeartBounds;
     private boolean voidHeartCollected = false;
+    private final java.util.HashSet<Entity> countedKills = new java.util.HashSet<>();
     private Texture voidHeartTexture;
 
     private com.amirali.graphics.AreaMusicManager areaMusic;
+
+    private Texture lanternMask;
+    private Texture blackPixel;
+    private float darkness = 0f;
+    private static final float MAX_DARKNESS = 0.62f;
+    private static final float LANTERN_SIZE = 1500f;
 
     @Override
     protected boolean showBackground() {
@@ -122,10 +140,12 @@ public class GameScreen extends AbstractScreen {
         mapPixelHeight = mapH * tileH;
 
         Array<Integer> bgList = new Array<>();
+        int bg3 = map.getLayers().getIndex("background3");
         int bg2 = map.getLayers().getIndex("background2");
         int bg1 = map.getLayers().getIndex("background");
         int mainL = map.getLayers().getIndex("main");
 
+        if (bg3 != -1) bgList.add(bg3);
         if (bg2 != -1) bgList.add(bg2);
         if (bg1 != -1) bgList.add(bg1);
         if (mainL != -1) bgList.add(mainL);
@@ -189,6 +209,8 @@ public class GameScreen extends AbstractScreen {
         areaMusic = new com.amirali.graphics.AreaMusicManager();
         areaMusic.update(game.player.position.x, 0f);
 
+        createLanternTextures();
+
         batch = new SpriteBatch();
         camera = new OrthographicCamera();
 
@@ -196,7 +218,6 @@ public class GameScreen extends AbstractScreen {
         viewport.update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         camera.position.set(game.player.position, 0);
         camera.update();
-        shapeRenderer = new ShapeRenderer();
 
         rockParticles = new ParticleEffect();
         try {
@@ -376,19 +397,17 @@ public class GameScreen extends AbstractScreen {
             } else if (!game.player.isDying) {
                 wasPlayerDying = false;
             }
-            int currentKills = 0;
-            boolean killedMoss = false, killedSkeet = false, killedHusk = false, killedCg = false;
+            for (Mosscreep c : mosscreeps) trackKill(c, "moss");
+            for (Mosquito m : mosquitoes) trackKill(m, "skeet");
+            for (HuskHornhead h : huskHornheads) trackKill(h, "husk");
+            for (CrystalGuardian cg : crystalGuardians) trackKill(cg, "cg");
 
-            for (Mosscreep c : mosscreeps) if (!c.isAlive()) { currentKills++; killedMoss = true; }
-            for (Mosquito m : mosquitoes) if (!m.isAlive()) { currentKills++; killedSkeet = true; }
-            for (HuskHornhead h : huskHornheads) if (!h.isAlive()) { currentKills++; killedHusk = true; }
-            for (CrystalGuardian cg : crystalGuardians) if (!cg.isAlive()) { currentKills++; killedCg = true; }
-
-            loadedData.killedEnemiesCount = currentKills;
             com.badlogic.gdx.Preferences achPrefs = Gdx.app.getPreferences("HollowKnightAchievements");
             boolean savePrefs = false;
 
-            if (killedMoss && killedSkeet && killedHusk && killedCg && !achPrefs.getBoolean("True Hunter", false)) {
+            String types = loadedData.killedEnemyTypes;
+            if (types.contains("moss") && types.contains("skeet") && types.contains("husk") && types.contains("cg")
+                && !achPrefs.getBoolean("True Hunter", false)) {
                 achPrefs.putBoolean("True Hunter", true); savePrefs = true;
                 openToast(t("toast.ach.trueHunter"));
             }
@@ -571,25 +590,25 @@ public class GameScreen extends AbstractScreen {
             if (game.player.isDashing && game.player.hasSharpShadow) {
                 Rectangle playerBox = game.player.getBounds();
                 for (Mosscreep c : mosscreeps) {
-                    if (c.isAlive() && playerBox.overlaps(c.getBounds()) && !game.player.isEnemyHit(c)) {
+                    if (c.isHarmful() && playerBox.overlaps(c.getBounds()) && !game.player.isEnemyHit(c)) {
                         c.takeDamage(shadowDamage, game.player.position.x);
                         game.player.markEnemyHit(c);
                     }
                 }
                 for (Mosquito c : mosquitoes) {
-                    if (c.isAlive() && playerBox.overlaps(c.getBounds()) && !game.player.isEnemyHit(c)) {
+                    if (c.isHarmful() && playerBox.overlaps(c.getBounds()) && !game.player.isEnemyHit(c)) {
                         c.takeDamage(shadowDamage, game.player.position.x);
                         game.player.markEnemyHit(c);
                     }
                 }
                 for (HuskHornhead c : huskHornheads) {
-                    if (c.isAlive() && playerBox.overlaps(c.getBounds()) && !game.player.isEnemyHit(c)) {
+                    if (c.isHarmful() && playerBox.overlaps(c.getBounds()) && !game.player.isEnemyHit(c)) {
                         c.takeDamage(shadowDamage, game.player.position.x);
                         game.player.markEnemyHit(c);
                     }
                 }
                 for (CrystalGuardian c : crystalGuardians) {
-                    if (c.isAlive() && playerBox.overlaps(c.getBounds()) && !game.player.isEnemyHit(c)) {
+                    if (c.isHarmful() && playerBox.overlaps(c.getBounds()) && !game.player.isEnemyHit(c)) {
                         c.takeDamage(shadowDamage, game.player.position.x);
                         game.player.markEnemyHit(c);
                     }
@@ -633,7 +652,7 @@ public class GameScreen extends AbstractScreen {
                     }
                 }
                 for (Mosscreep c : mosscreeps) {
-                    if (c.isAlive() && ab.overlaps(c.getBounds())) {
+                    if (c.isHarmful() && ab.overlaps(c.getBounds())) {
                         if (game.player.tryConsumeHit()) {
                             c.takeDamage(nailDamage, game.player.position.x);
                             game.player.addSoul(Player.SOUL_PER_HIT);
@@ -642,7 +661,7 @@ public class GameScreen extends AbstractScreen {
                     }
                 }
                 for (Mosquito c : mosquitoes) {
-                    if (c.isAlive() && ab.overlaps(c.getBounds())) {
+                    if (c.isHarmful() && ab.overlaps(c.getBounds())) {
                         if (game.player.tryConsumeHit()) {
                             c.takeDamage(nailDamage, game.player.position.x);
                             game.player.addSoul(Player.SOUL_PER_HIT);
@@ -651,7 +670,7 @@ public class GameScreen extends AbstractScreen {
                     }
                 }
                 for (HuskHornhead c : huskHornheads) {
-                    if (c.isAlive() && ab.overlaps(c.getBounds())) {
+                    if (c.isHarmful() && ab.overlaps(c.getBounds())) {
                         if (game.player.tryConsumeHit()) {
                             c.takeDamage(nailDamage, game.player.position.x);
                             game.player.addSoul(Player.SOUL_PER_HIT);
@@ -660,7 +679,7 @@ public class GameScreen extends AbstractScreen {
                     }
                 }
                 for (CrystalGuardian c : crystalGuardians) {
-                    if (c.isAlive() && ab.overlaps(c.getBounds())) {
+                    if (c.isHarmful() && ab.overlaps(c.getBounds())) {
                         if (game.player.tryConsumeHit()) {
                             c.takeDamage(nailDamage, game.player.position.x);
                             game.player.addSoul(Player.SOUL_PER_HIT);
@@ -714,7 +733,7 @@ public class GameScreen extends AbstractScreen {
                     }
                 }
                 for (Mosscreep c : mosscreeps) {
-                    if (c.isAlive() && downBox.overlaps(c.getBounds())) {
+                    if (c.isHarmful() && downBox.overlaps(c.getBounds())) {
                         c.takeDamagePogo(nailDamage);
                         game.player.pogoBounce();
                         game.player.addSoul(Player.SOUL_PER_HIT);
@@ -728,7 +747,7 @@ public class GameScreen extends AbstractScreen {
                     }
                 }
                 for (Mosquito c : mosquitoes) {
-                    if (c.isAlive() && downBox.overlaps(c.getBounds())) {
+                    if (c.isHarmful() && downBox.overlaps(c.getBounds())) {
                         c.takeDamagePogo(nailDamage);
                         game.player.pogoBounce();
                         game.player.addSoul(Player.SOUL_PER_HIT);
@@ -736,7 +755,7 @@ public class GameScreen extends AbstractScreen {
                     }
                 }
                 for (HuskHornhead c : huskHornheads) {
-                    if (c.isAlive() && downBox.overlaps(c.getBounds())) {
+                    if (c.isHarmful() && downBox.overlaps(c.getBounds())) {
                         c.takeDamagePogo(nailDamage);
                         game.player.pogoBounce();
                         game.player.addSoul(Player.SOUL_PER_HIT);
@@ -744,7 +763,7 @@ public class GameScreen extends AbstractScreen {
                     }
                 }
                 for (CrystalGuardian c : crystalGuardians) {
-                    if (c.isAlive() && downBox.overlaps(c.getBounds())) {
+                    if (c.isHarmful() && downBox.overlaps(c.getBounds())) {
                         c.takeDamagePogo(nailDamage);
                         game.player.pogoBounce();
                         game.player.addSoul(Player.SOUL_PER_HIT);
@@ -796,7 +815,7 @@ public class GameScreen extends AbstractScreen {
                     }
                 }
                 for (Mosscreep c : mosscreeps) {
-                    if (c.isAlive() && upBox.overlaps(c.getBounds())) {
+                    if (c.isHarmful() && upBox.overlaps(c.getBounds())) {
                         c.takeDamage(nailDamage, game.player.position.x);
                         game.player.addSoul(Player.SOUL_PER_HIT);
                         game.player.upHitConsumed = true;
@@ -804,7 +823,7 @@ public class GameScreen extends AbstractScreen {
                     }
                 }
                 for (Mosquito c : mosquitoes) {
-                    if (c.isAlive() && upBox.overlaps(c.getBounds())) {
+                    if (c.isHarmful() && upBox.overlaps(c.getBounds())) {
                         c.takeDamage(nailDamage, game.player.position.x);
                         game.player.addSoul(Player.SOUL_PER_HIT);
                         game.player.upHitConsumed = true;
@@ -812,7 +831,7 @@ public class GameScreen extends AbstractScreen {
                     }
                 }
                 for (HuskHornhead c : huskHornheads) {
-                    if (c.isAlive() && upBox.overlaps(c.getBounds())) {
+                    if (c.isHarmful() && upBox.overlaps(c.getBounds())) {
                         c.takeDamage(nailDamage, game.player.position.x);
                         game.player.addSoul(Player.SOUL_PER_HIT);
                         game.player.upHitConsumed = true;
@@ -820,7 +839,7 @@ public class GameScreen extends AbstractScreen {
                     }
                 }
                 for (CrystalGuardian c : crystalGuardians) {
-                    if (c.isAlive() && upBox.overlaps(c.getBounds())) {
+                    if (c.isHarmful() && upBox.overlaps(c.getBounds())) {
                         c.takeDamage(nailDamage, game.player.position.x);
                         game.player.addSoul(Player.SOUL_PER_HIT);
                         game.player.upHitConsumed = true;
@@ -838,7 +857,7 @@ public class GameScreen extends AbstractScreen {
             if (game.player.isVengefulSpiritActive) {
                 Rectangle projBox = game.player.getVengefulSpiritBox();
                 for (Mosscreep c : mosscreeps) {
-                    if (c.isAlive() && projBox.overlaps(c.getBounds())) {
+                    if (c.isHarmful() && projBox.overlaps(c.getBounds())) {
                         if (!game.player.isEnemyHit(c)) {
                             c.takeDamage(spellDamage, game.player.spiritPosition.x);
                             game.player.addSoul(Player.SOUL_PER_HIT);
@@ -847,7 +866,7 @@ public class GameScreen extends AbstractScreen {
                     }
                 }
                 for (Mosquito c : mosquitoes) {
-                    if (c.isAlive() && projBox.overlaps(c.getBounds())) {
+                    if (c.isHarmful() && projBox.overlaps(c.getBounds())) {
                         if (!game.player.isEnemyHit(c)) {
                             c.takeDamage(spellDamage, game.player.spiritPosition.x);
                             game.player.addSoul(Player.SOUL_PER_HIT);
@@ -856,7 +875,7 @@ public class GameScreen extends AbstractScreen {
                     }
                 }
                 for (HuskHornhead c : huskHornheads) {
-                    if (c.isAlive() && projBox.overlaps(c.getBounds())) {
+                    if (c.isHarmful() && projBox.overlaps(c.getBounds())) {
                         if (!game.player.isEnemyHit(c)) {
                             c.takeDamage(spellDamage, game.player.spiritPosition.x);
                             game.player.addSoul(Player.SOUL_PER_HIT);
@@ -865,7 +884,7 @@ public class GameScreen extends AbstractScreen {
                     }
                 }
                 for (CrystalGuardian c : crystalGuardians) {
-                    if (c.isAlive() && projBox.overlaps(c.getBounds())) {
+                    if (c.isHarmful() && projBox.overlaps(c.getBounds())) {
                         if (!game.player.isEnemyHit(c)) {
                             c.takeDamage(spellDamage, game.player.spiritPosition.x);
                             game.player.addSoul(Player.SOUL_PER_HIT);
@@ -878,7 +897,7 @@ public class GameScreen extends AbstractScreen {
             if (game.player.isHowlingWraithsActive) {
                 Rectangle hwBox = game.player.getHowlingWraithsBox();
                 for (Mosscreep c : mosscreeps) {
-                    if (c.isAlive() && hwBox.overlaps(c.getBounds())) {
+                    if (c.isHarmful() && hwBox.overlaps(c.getBounds())) {
                         if (game.player.tryHowlingWraithsHit()) {
                             c.takeDamage(spellDamage, game.player.position.x);
                             game.player.addSoul(Player.SOUL_PER_HIT);
@@ -887,7 +906,7 @@ public class GameScreen extends AbstractScreen {
                     }
                 }
                 for (Mosquito c : mosquitoes) {
-                    if (c.isAlive() && hwBox.overlaps(c.getBounds())) {
+                    if (c.isHarmful() && hwBox.overlaps(c.getBounds())) {
                         if (game.player.tryHowlingWraithsHit()) {
                             c.takeDamage(spellDamage, game.player.position.x);
                             game.player.addSoul(Player.SOUL_PER_HIT);
@@ -896,7 +915,7 @@ public class GameScreen extends AbstractScreen {
                     }
                 }
                 for (HuskHornhead c : huskHornheads) {
-                    if (c.isAlive() && hwBox.overlaps(c.getBounds())) {
+                    if (c.isHarmful() && hwBox.overlaps(c.getBounds())) {
                         if (game.player.tryHowlingWraithsHit()) {
                             c.takeDamage(spellDamage, game.player.position.x);
                             game.player.addSoul(Player.SOUL_PER_HIT);
@@ -905,7 +924,7 @@ public class GameScreen extends AbstractScreen {
                     }
                 }
                 for (CrystalGuardian c : crystalGuardians) {
-                    if (c.isAlive() && hwBox.overlaps(c.getBounds())) {
+                    if (c.isHarmful() && hwBox.overlaps(c.getBounds())) {
                         if (game.player.tryHowlingWraithsHit()) {
                             c.takeDamage(spellDamage, game.player.position.x);
                             game.player.addSoul(Player.SOUL_PER_HIT);
@@ -919,28 +938,28 @@ public class GameScreen extends AbstractScreen {
 
             if (!isShadowDashing) {
                 for (Mosscreep c : mosscreeps) {
-                    if (c.isAlive() && c.getBounds().overlaps(game.player.getBounds())) {
+                    if (c.isHarmful() && c.getBounds().overlaps(game.player.getBounds())) {
                         if (!game.player.isDying) {
                             game.player.takeDamage(1f, c.getBounds().x);
                         }
                     }
                 }
                 for (Mosquito c : mosquitoes) {
-                    if (c.isAlive() && c.getBounds().overlaps(game.player.getBounds())) {
+                    if (c.isHarmful() && c.getBounds().overlaps(game.player.getBounds())) {
                         if (!game.player.isDying) {
                             game.player.takeDamage(1f, c.getBounds().x);
                         }
                     }
                 }
                 for (HuskHornhead c : huskHornheads) {
-                    if (c.isAlive() && c.getBounds().overlaps(game.player.getBounds())) {
+                    if (c.isHarmful() && c.getBounds().overlaps(game.player.getBounds())) {
                         if (!game.player.isDying) {
                             game.player.takeDamage(1f, c.getBounds().x);
                         }
                     }
                 }
                 for (CrystalGuardian c : crystalGuardians) {
-                    if (c.isAlive() && c.getBounds().overlaps(game.player.getBounds())) {
+                    if (c.isHarmful() && c.getBounds().overlaps(game.player.getBounds())) {
                         if (!game.player.isDying) {
                             game.player.takeDamage(1f, c.getBounds().x);
                         }
@@ -984,9 +1003,14 @@ public class GameScreen extends AbstractScreen {
         camera.update();
 
         batch.setProjectionMatrix(camera.combined);
-        shapeRenderer.setProjectionMatrix(camera.combined);
 
-        renderer.setView((OrthographicCamera) camera);
+        OrthographicCamera cam = (OrthographicCamera) camera;
+        float cullPad = 1024f;
+        renderer.setView(cam.combined,
+            cam.position.x - cam.viewportWidth / 2f - cullPad,
+            cam.position.y - cam.viewportHeight / 2f - cullPad,
+            cam.viewportWidth + cullPad,
+            cam.viewportHeight + cullPad);
 
         renderer.render(backgroundLayers);
 
@@ -1187,6 +1211,8 @@ public class GameScreen extends AbstractScreen {
         }
         batch.end();
 
+        drawLanternDarkness(delta);
+
         batch.begin();
         com.badlogic.gdx.graphics.g2d.BitmapFont font = skin.getFont("default-font");
         boolean nearZote = zote != null && game.player.getBounds().overlaps(zote.getInteractBounds()) && zote.state == Zote.State.IDLE;
@@ -1222,49 +1248,6 @@ public class GameScreen extends AbstractScreen {
         }
         batch.end();
 
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-
-        shapeRenderer.setColor(Color.YELLOW);
-        Rectangle pb = game.player.getBounds();
-        shapeRenderer.rect(pb.x, pb.y, pb.width, pb.height);
-
-        shapeRenderer.setColor(Color.RED);
-        if (game.player.isAttacking()) {
-            Rectangle ab = game.player.getAttackBox();
-            shapeRenderer.rect(ab.x, ab.y, ab.width, ab.height);
-        }
-        if (game.player.isDownSlashing) {
-            Rectangle downBox = game.player.getDownSlashBox();
-            shapeRenderer.rect(downBox.x, downBox.y, downBox.width, downBox.height);
-        }
-        if (game.player.isUpSlashing) {
-            Rectangle upBox = game.player.getUpSlashBox();
-            shapeRenderer.rect(upBox.x, upBox.y, upBox.width, upBox.height);
-        }
-        if (game.player.isHowlingWraithsActive) {
-            Rectangle hwBox = game.player.getHowlingWraithsBox();
-            shapeRenderer.rect(hwBox.x, hwBox.y, hwBox.width, hwBox.height);
-        }
-        if (game.player.isVengefulSpiritActive) {
-            Rectangle pBox = game.player.getVengefulSpiritBox();
-            shapeRenderer.rect(pBox.x, pBox.y, pBox.width, pBox.height);
-        }
-
-        if (falseKnight != null && !falseKnight.isDefeated()) {
-
-            shapeRenderer.setColor(Color.MAGENTA);
-            Rectangle fkBox = falseKnight.getActiveHitbox();
-            shapeRenderer.rect(fkBox.x, fkBox.y, fkBox.width, fkBox.height);
-            FalseKnight.State fkState = falseKnight.getState();
-            if (fkState == FalseKnight.State.SLAM_ANTIC || fkState == FalseKnight.State.SLAM_HIT || fkState == FalseKnight.State.SLAM_RECOVER) {
-                shapeRenderer.setColor(Color.ORANGE);
-                Rectangle maceBox = falseKnight.getMaceHitbox();
-                shapeRenderer.rect(maceBox.x, maceBox.y, maceBox.width, maceBox.height);
-            }
-        }
-
-        shapeRenderer.end();
-
         hud.render(game.player, delta);
         super.render(delta);
     }
@@ -1279,7 +1262,72 @@ public class GameScreen extends AbstractScreen {
             areaMusic.dispose();
         }
         if (ambientParticles != null) ambientParticles.dispose();
+        if (lanternMask != null) lanternMask.dispose();
+        if (blackPixel != null) blackPixel.dispose();
     }
+    private void createLanternTextures() {
+        int size = 512;
+        com.badlogic.gdx.graphics.Pixmap pm = new com.badlogic.gdx.graphics.Pixmap(size, size, com.badlogic.gdx.graphics.Pixmap.Format.RGBA8888);
+        float center = size / 2f;
+        float inner = size * 0.22f;
+        float outer = size * 0.5f;
+        for (int y = 0; y < size; y++) {
+            for (int x = 0; x < size; x++) {
+                float dx = x - center, dy = y - center;
+                float r = (float) Math.sqrt(dx * dx + dy * dy);
+                float t = MathUtils.clamp((r - inner) / (outer - inner), 0f, 1f);
+                float a = t * t * (3f - 2f * t);
+                pm.setColor(0f, 0f, 0f, a);
+                pm.drawPixel(x, y);
+            }
+        }
+        lanternMask = new Texture(pm);
+        lanternMask.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+        pm.dispose();
+
+        com.badlogic.gdx.graphics.Pixmap black = new com.badlogic.gdx.graphics.Pixmap(1, 1, com.badlogic.gdx.graphics.Pixmap.Format.RGBA8888);
+        black.setColor(Color.BLACK);
+        black.fill();
+        blackPixel = new Texture(black);
+        black.dispose();
+    }
+
+    private void drawLanternDarkness(float delta) {
+        boolean inDarkArea = com.amirali.graphics.AreaMusicManager.areaAt(game.player.position.x)
+            == com.amirali.graphics.AreaMusicManager.Area.FORGOTTEN_CROSSROADS;
+        float target = inDarkArea ? MAX_DARKNESS : 0f;
+        darkness += (target - darkness) * Math.min(1f, delta * 2.5f);
+        if (darkness < 0.01f || lanternMask == null) return;
+
+        float px = game.player.position.x + Player.DRAW_OFFSET_X + game.player.spriteDrawnW / 2f;
+        float py = game.player.position.y + game.player.spriteDrawnH / 2f;
+
+        float pad = 60f;
+        float viewL = camera.position.x - camera.viewportWidth / 2f - pad;
+        float viewB = camera.position.y - camera.viewportHeight / 2f - pad;
+        float viewR = camera.position.x + camera.viewportWidth / 2f + pad;
+        float viewT = camera.position.y + camera.viewportHeight / 2f + pad;
+
+        float half = LANTERN_SIZE / 2f;
+        float lx = px - half, ly = py - half;
+        float rx = px + half, ty = py + half;
+
+        batch.begin();
+        batch.setColor(1f, 1f, 1f, darkness);
+        batch.draw(lanternMask, lx, ly, LANTERN_SIZE, LANTERN_SIZE);
+
+        if (lx > viewL) batch.draw(blackPixel, viewL, viewB, lx - viewL, viewT - viewB);
+        if (rx < viewR) batch.draw(blackPixel, rx, viewB, viewR - rx, viewT - viewB);
+        float midL = Math.max(lx, viewL);
+        float midW = Math.min(rx, viewR) - midL;
+        if (midW > 0f) {
+            if (ly > viewB) batch.draw(blackPixel, midL, viewB, midW, ly - viewB);
+            if (ty < viewT) batch.draw(blackPixel, midL, ty, midW, viewT - ty);
+        }
+        batch.setColor(Color.WHITE);
+        batch.end();
+    }
+
     private void closeGates() {
         if (bossArena == null) return;
         float t = 40f;
