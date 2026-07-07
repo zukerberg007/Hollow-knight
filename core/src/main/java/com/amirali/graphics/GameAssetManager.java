@@ -287,7 +287,7 @@ public class GameAssetManager {
                 );
             }
         }
-        if (type == AnimationType.HOLLOW_KNIGHT_DOUBLE_JUMP_FRAMES || type == AnimationType.HOLLOW_KNIGHT_NORMAL_SLASH_EFFECT ||type == AnimationType.HOLLOW_KNIGHT_SLASH_ALT_EFFECT || type == AnimationType.HOLLOW_KNIGHT_UP_SLASH_EFFECT || type == AnimationType.HOLLOW_KNIGHT_DOWN_SLASH_EFFECT) {
+        if (type == AnimationType.HOLLOW_KNIGHT_DOUBLE_JUMP_FRAMES || type == AnimationType.HOLLOW_KNIGHT_NORMAL_SLASH_EFFECT ||type == AnimationType.HOLLOW_KNIGHT_SLASH_ALT_EFFECT || type == AnimationType.HOLLOW_KNIGHT_UP_SLASH_EFFECT || type == AnimationType.HOLLOW_KNIGHT_DOWN_SLASH_EFFECT || type == AnimationType.HOLLOW_KNIGHT_SHADOW_DASH_FRAMES) {
             for (int i = 0; i < frameCount / 2; i++) {
                 TextureRegion temp = frames[i];
                 frames[i] = frames[frameCount - 1 - i];
@@ -310,6 +310,11 @@ public class GameAssetManager {
             frameDuration = 0.5f;
             animation = new Animation<>(frameDuration, frames);
             animation.setPlayMode(Animation.PlayMode.LOOP);
+        }
+        else if (type == AnimationType.HOLLOW_KNIGHT_SHADOW_DASH_FRAMES) {
+            frameDuration = 0.25f / 11f;
+            animation = new Animation<>(frameDuration, frames);
+            animation.setPlayMode(Animation.PlayMode.NORMAL);
         }
         else if (
             type.equals(AnimationType.HOLLOW_KNIGHT_NORMAL_SLASH) || type.equals(AnimationType.HOLLOW_KNIGHT_DOWN_SLASH_EFFECT) || type.equals(AnimationType.HOLLOW_KNIGHT_SLASH_ALT)  ||

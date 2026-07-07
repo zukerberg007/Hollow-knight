@@ -15,6 +15,7 @@ public enum AnimationType {
     HOLLOW_KNIGHT_DOWN_SLASH_EFFECT("animations/Effects/DownSlashEffect.png", 6, 1, 6),
     HOLLOW_KNIGHT_MASK_REFILL_FRAMES("animations/HUD/HealthRefill.png", 5, 1, 5),
     HOLLOW_KNIGHT_DASH_FRAMES("animations/Dash.png", 12, 1, 12),
+    HOLLOW_KNIGHT_SHADOW_DASH_FRAMES("animations/Shadow Dash.png", 11, 1, 11),
     HOLLOW_KNIGHT_LOOKING_DOWN_FRAMES("animations/LookDown.png", 6, 1, 6),
     HOLLOW_KNIGHT_LOOKING_UP_FRAMES("animations/LookUp.png", 6, 1, 6),
     HOLLOW_KNIGHT_LANDING_FRAMES("animations/Landing.png", 4, 1, 4),

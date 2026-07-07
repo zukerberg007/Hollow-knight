@@ -70,7 +70,7 @@ public class FalseKnight extends Entity {
     private static final float BODY_TOUCH_DMG = 1f;
     private static final float SLAM_DMG       = 1f;
     private static final float CHARGE_DMG     = 1f;
-    private static final float SHOCKWAVE_DMG  = 1f;
+    private static final float SHOCKWAVE_DMG  = 2f;
     private static final float STUN_DMG_MULT  = 2f;
 
     private static final float HEAVY_WINDOW    = 1.4f;

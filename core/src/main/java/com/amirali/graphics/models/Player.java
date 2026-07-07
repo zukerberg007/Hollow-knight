@@ -122,6 +122,8 @@ public class Player extends Entity{
     private float damageFlashTimer = 0f;
     private static final float DAMAGE_FLASH_INTERVAL = 0.08f;
     private boolean runSoundPlaying = false;
+    public boolean emergencyHealArmed = false;
+    private boolean emergencyHealTriggered = false;
     public boolean isDying = false;
     private float deathTimer = 0f;
     private static final float DEATH_ANIM_DURATION = 1.8f;
@@ -272,7 +274,7 @@ public class Player extends Entity{
             float currentDashSpeed = hasSharpShadow ? DASH_SPEED * 1.2f : DASH_SPEED;
             velocity.x = currentDashSpeed * dashDir;
             velocity.y = 0;
-            currentAnimation = AnimationType.HOLLOW_KNIGHT_DASH_FRAMES;
+            currentAnimation = hasVoidHeart ? AnimationType.HOLLOW_KNIGHT_SHADOW_DASH_FRAMES : AnimationType.HOLLOW_KNIGHT_DASH_FRAMES;
 
             if (dashTimer <= 0) {
                 isDashing = false;
@@ -873,8 +875,21 @@ public class Player extends Entity{
 
     public void checkDeath() {
         if (masks <= 0 && !isDying) {
+            if (emergencyHealArmed) {
+                emergencyHealArmed = false;
+                emergencyHealTriggered = true;
+                masks = 1;
+                playSound(GameAssetManager.healSound, 1.0f);
+                return;
+            }
             triggerDeath();
         }
+    }
+
+    public boolean consumeEmergencyHealTriggered() {
+        boolean triggered = emergencyHealTriggered;
+        emergencyHealTriggered = false;
+        return triggered;
     }
 
     public void castVengefulSpirit() {

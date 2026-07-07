@@ -51,6 +51,7 @@ public class GuideMenuScreen extends AbstractScreen {
         addCheatRow(leftCol, "Ctrl + N", t("guide.cheat.n"));
         addCheatRow(leftCol, "Ctrl + B", t("guide.cheat.b"));
         addCheatRow(leftCol, "Ctrl + M", t("guide.cheat.m"));
+        addCheatRow(leftCol, "Ctrl + H", t("guide.cheat.h"));
 
         Table rightCol = new Table();
         rightCol.top().left();

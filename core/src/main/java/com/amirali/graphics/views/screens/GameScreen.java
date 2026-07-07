@@ -318,8 +318,8 @@ public class GameScreen extends AbstractScreen {
                 openToast(t(game.player.isNoclip ? "toast.cheat.noclip.on" : "toast.cheat.noclip.off"));
             }
             if (Gdx.input.isKeyJustPressed(Input.Keys.H)) {
-                game.player.masks = game.player.maxMasks;
-                openToast(t("toast.cheat.health"));
+                game.player.emergencyHealArmed = !game.player.emergencyHealArmed;
+                openToast(t(game.player.emergencyHealArmed ? "toast.cheat.heal.on" : "toast.cheat.heal.off"));
             }
             if (Gdx.input.isKeyJustPressed(Input.Keys.M)) {
                 game.player.soul = Player.MAX_SOUL;
@@ -967,6 +967,9 @@ public class GameScreen extends AbstractScreen {
                 }
             }
             game.player.checkDeath();
+            if (game.player.consumeEmergencyHealTriggered()) {
+                openToast(t("toast.cheat.heal.used"));
+            }
 
             float ps = game.player.consumeShakeMag();
             if (ps > 0f && (ps >= shakeMag || shakeTime <= 0f)) {
